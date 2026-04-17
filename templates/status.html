@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Request Status</h2>
+  <p><strong>Employee:</strong> {{ request_item.employee_name }}</p>
+  <p><strong>Email:</strong> {{ request_item.employee_email }}</p>
+  <p><strong>Status:</strong> {{ request_item.status }}</p>
+</div>
+{% endblock %}

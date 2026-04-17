@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+  <h2>Dashboard</h2>
+
+  {% if role == 'HR' %}
+    <a class="btn" href="{{ url_for('hr_new_request') }}">New HR Request</a>
+  {% endif %}
+
+  {% if role in ['CISO', 'MANAGEMENT'] %}
+    <a class="btn" href="{{ url_for('approvals') }}">Pending Approvals</a>
+  {% endif %}
+
+  <div class="table">
+    <div class="table-header">
+      <span>Employee</span>
+      <span>Email</span>
+      <span>Status</span>
+      <span>Action</span>
+    </div>
+    {% for req in requests %}
+      <div class="table-row">
+        <span>{{ req.employee_name }}</span>
+        <span>{{ req.employee_email }}</span>
+        <span>{{ req.status }}</span>
+        <span>
+          {% if role == 'IT_ADMIN' and req.status == 'PENDING_IT' %}
+            <a class="btn small" href="{{ url_for('it_provision', request_id=req.id) }}">Provision</a>
+          {% else %}
+            <a class="btn small secondary" href="{{ url_for('request_status', request_id=req.id) }}">View</a>
+          {% endif %}
+        </span>
+      </div>
+    {% else %}
+      <div class="table-row">
+        <span>No requests found.</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

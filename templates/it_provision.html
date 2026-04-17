@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Provision User ID</h2>
+  <p><strong>{{ request_item.employee_name }}</strong> ({{ request_item.employee_email }})</p>
+  <form method="post">
+    <label>IT User ID</label>
+    <input type="text" name="it_user_id" required>
+    <label>Microsoft License</label>
+    <select name="license_type" required>
+      <option value="M365 Business Premium">M365 Business Premium</option>
+      <option value="M365 E3">M365 E3</option>
+      <option value="M365 E5">M365 E5</option>
+    </select>
+    <label>Security Groups (comma separated)</label>
+    <input type="text" name="security_groups">
+    <button type="submit" class="btn">Send for Approval</button>
+  </form>
+</div>
+{% endblock %}

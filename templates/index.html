@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <h1>Company IAM Portal</h1>
+  <p>Secure identity and access management for HR, IT, CISO, and Management teams.</p>
+  <div class="cta">
+    <a class="btn" href="{{ url_for('login') }}">Login</a>
+    <a class="btn secondary" href="{{ url_for('signup') }}">Sign Up</a>
+  </div>
+</section>
+
+<section class="info-grid">
+  <div>
+    <h3>HR Requests</h3>
+    <p>Create onboarding requests for new employees and track status.</p>
+  </div>
+  <div>
+    <h3>IT Provisioning</h3>
+    <p>Assign licenses, security groups, and provision user IDs securely.</p>
+  </div>
+  <div>
+    <h3>Approvals</h3>
+    <p>CISO and Management approvals ensure governance and compliance.</p>
+  </div>
+  <div>
+    <h3>Tenant Isolation</h3>
+    <p>Domain-based access ensures each company only sees its own data.</p>
+  </div>
+</section>
+{% endblock %}

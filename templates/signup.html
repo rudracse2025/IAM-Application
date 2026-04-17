@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Create Account</h2>
+  <form method="post">
+    <label>Work Email</label>
+    <input type="email" name="email" required>
+    <label>Password</label>
+    <input type="password" name="password" required>
+    <label>Role</label>
+    <select name="role" required>
+      {% for key, label in roles.items() %}
+        <option value="{{ key }}">{{ label }}</option>
+      {% endfor %}
+    </select>
+    <label>Company Domain</label>
+    <input type="text" name="domain" placeholder="bluvium.com" required>
+    <button type="submit" class="btn">Sign Up</button>
+  </form>
+</div>
+{% endblock %}

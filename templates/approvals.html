@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+  <h2>Pending Approvals</h2>
+  <div class="table">
+    <div class="table-header">
+      <span>Employee</span>
+      <span>Email</span>
+      <span>Status</span>
+      <span>Decision</span>
+    </div>
+    {% for req in requests %}
+      <div class="table-row">
+        <span>{{ req.employee_name }}</span>
+        <span>{{ req.employee_email }}</span>
+        <span>{{ req.status }}</span>
+        <span>
+          <form method="post" action="{{ url_for('approve_request', request_id=req.id) }}" class="inline-form">
+            <button class="btn small" name="decision" value="APPROVED">Approve</button>
+            <button class="btn small secondary" name="decision" value="REJECTED">Reject</button>
+          </form>
+        </span>
+      </div>
+    {% else %}
+      <div class="table-row">
+        <span>No pending approvals.</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
