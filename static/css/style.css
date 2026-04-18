@@ -10,6 +10,7 @@
   --danger-bg: #fee2e2;
   --warning-bg: #fef3c7;
   --border: #dbe4f0;
+  --max-content-width: 1120px;
 }
 
 * {
@@ -57,7 +58,7 @@ nav .nav-meta {
 }
 
 main {
-  width: min(1120px, 92%);
+  width: min(var(--max-content-width), 92%);
   margin: 0 auto;
   padding: 2rem 0 3rem;
 }
