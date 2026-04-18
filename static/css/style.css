@@ -187,9 +187,10 @@ h2 {
   margin-top: 0;
 }
 
-.testimonial-card span {
+.testimonial-card cite {
   color: var(--muted);
   font-size: 0.9rem;
+  font-style: normal;
 }
 
 .cta-secondary {
