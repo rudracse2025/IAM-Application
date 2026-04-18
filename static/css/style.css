@@ -33,11 +33,7 @@ body {
   background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 40%), var(--bg);
   color: var(--text);
   min-height: 100vh;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 220ms ease, transform 220ms ease;
 }
-body.page-ready { opacity: 1; transform: translateY(0); }
 
 a { color: var(--primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -363,8 +359,8 @@ input:focus, select:focus, textarea:focus {
 
 @media print {
   .topbar, .breadcrumbs, .inline-actions, .tabs, .toast-container, .modal { display: none !important; }
-  body { background: #fff; color: #000; }
-  .card, .timeline-item { border: 1px solid #ddd; box-shadow: none; }
+  body { background: var(--surface); color: var(--text); }
+  .card, .timeline-item { border: 1px solid var(--border); box-shadow: none; }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }

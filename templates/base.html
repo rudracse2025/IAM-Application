@@ -20,7 +20,7 @@
         {% endif %}
 
         <div class="notification-center">
-          <button type="button" class="notification-bell" data-notification-trigger aria-label="Open notifications">🔔</button>
+          <button type="button" class="notification-bell" data-notification-trigger aria-label="Open notifications">Notifications</button>
           <div class="notification-panel" data-notification-menu>
             <strong>Notification Center</strong>
             <p class="muted">No new alerts. Updates appear here after workflow actions.</p>
@@ -49,7 +49,7 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-          <div class="toast {{ category }}" data-timeout="4500">{{ message }}</div>
+          <div class="toast {{ category }}" data-timeout="4500" role="{{ 'alert' if category in ['danger', 'warning'] else 'status' }}">{{ message }}</div>
         {% endfor %}
       {% endif %}
     {% endwith %}

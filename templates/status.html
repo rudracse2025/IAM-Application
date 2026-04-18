@@ -66,11 +66,15 @@
     const shareBtn = document.getElementById('share-status');
     shareBtn?.addEventListener('click', async () => {
       const url = window.location.href;
-      if (navigator.share) {
-        await navigator.share({ title: 'IAM Request Status', url });
-      } else {
-        await navigator.clipboard.writeText(url);
-        alert('Status link copied to clipboard.');
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: 'IAM Request Status', url });
+        } else {
+          await navigator.clipboard.writeText(url);
+          alert('Status link copied to clipboard.');
+        }
+      } catch (error) {
+        alert('Unable to share automatically. Please copy the page URL from your browser.');
       }
     });
   });

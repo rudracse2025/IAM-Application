@@ -24,7 +24,7 @@
           <input id="password" type="password" name="password" required>
           <button type="button" class="password-toggle" data-password-toggle="password">Show</button>
         </div>
-        <small class="muted" data-password-strength>Password strength: Very weak</small>
+        <small class="muted" data-password-strength aria-live="polite">Password strength: Very weak</small>
         <div class="validation-hint"></div>
       </div>
 
@@ -52,7 +52,9 @@
         <div class="validation-hint"></div>
       </div>
 
-      <label><input type="checkbox" name="terms" required> I accept the access policy and terms.</label>
+      <div class="field-group">
+        <label for="terms"><input id="terms" type="checkbox" name="terms" required> I accept the access policy and terms.</label>
+      </div>
 
       <div class="stepper-actions">
         <button type="button" class="btn secondary" data-step-back>Back</button>

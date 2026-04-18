@@ -1,7 +1,7 @@
 (() => {
-  const onReady = () => {
-    document.body.classList.add('page-ready');
+  const BULK_OPEN_CONFIRM_THRESHOLD = 5;
 
+  const onReady = () => {
     initDropdowns();
     initToasts();
     initValidation();
@@ -78,7 +78,8 @@
       error = 'This field is required.';
     }
     if (!error && field.type === 'email') {
-      const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim());
+      const value = field.value.trim();
+      const validEmail = isValidEmail(value);
       if (!validEmail) error = 'Enter a valid email address.';
     }
 
@@ -291,7 +292,11 @@
         addToast('Select at least one request first.', 'warning');
         return;
       }
+      if (selected.length > BULK_OPEN_CONFIRM_THRESHOLD && !window.confirm(`Open ${selected.length} status pages in new tabs?`)) {
+        return;
+      }
       selected.forEach((url) => window.open(url, '_blank'));
+      addToast(`Opened ${selected.length} status page(s) in new tabs.`, 'success');
     });
   };
 
@@ -304,12 +309,12 @@
           input.focus();
         }
       }
-      if (event.altKey && event.key.toLowerCase() === 'd') {
+      if (event.altKey && event.shiftKey && event.key.toLowerCase() === 'd') {
         const dashboardLink = document.querySelector('a[href*="/dashboard"]');
         if (dashboardLink) window.location.href = dashboardLink.href;
       }
       if (event.key === '?') {
-        addToast('Keyboard shortcuts: / (search), Alt+D (dashboard).', 'success');
+        addToast('Keyboard shortcuts: / (search), Alt+Shift+D (dashboard).', 'success');
       }
     });
   };
@@ -322,6 +327,13 @@
     div.textContent = message;
     container.appendChild(div);
     setTimeout(() => div.remove(), 3500);
+  };
+
+  const isValidEmail = (value) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) &&
+      !value.includes('..') &&
+      !value.split('@')[1]?.startsWith('.') &&
+      !value.split('@')[1]?.endsWith('.');
   };
 
   document.addEventListener('DOMContentLoaded', onReady);

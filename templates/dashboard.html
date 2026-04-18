@@ -17,6 +17,14 @@
   {% endif %}
 {%- endmacro %}
 
+{% macro progress_steps(status) -%}
+  <div class="progress-track">
+    <div class="progress-step {% if status in ['PENDING_IT', 'PENDING_APPROVAL', 'APPROVED', 'REJECTED'] %}active{% endif %}">Requested</div>
+    <div class="progress-step {% if status in ['PENDING_APPROVAL', 'APPROVED', 'REJECTED'] %}active{% endif %}">Provisioned</div>
+    <div class="progress-step {% if status in ['APPROVED', 'REJECTED'] %}active{% endif %}">Finalized</div>
+  </div>
+{%- endmacro %}
+
 {% block content %}
 <section class="card">
   <h2>Dashboard</h2>
@@ -52,7 +60,7 @@
             <table>
               <thead>
                 <tr>
-                  <th><input type="checkbox" data-bulk-master aria-label="Select all"></th>
+                  <th><input type="checkbox" data-bulk-master aria-label="Select all requests in this tab"></th>
                   <th>Employee</th>
                   <th>Email</th>
                   <th>Status</th>
@@ -71,13 +79,7 @@
                       <td>{{ req.employee_name }}</td>
                       <td>{{ req.employee_email }}</td>
                       <td>{{ status_badge(req.status) }}</td>
-                      <td>
-                        <div class="progress-track">
-                          <div class="progress-step {% if req.status in ['PENDING_IT', 'PENDING_APPROVAL', 'APPROVED', 'REJECTED'] %}active{% endif %}">Requested</div>
-                          <div class="progress-step {% if req.status in ['PENDING_APPROVAL', 'APPROVED', 'REJECTED'] %}active{% endif %}">Provisioned</div>
-                          <div class="progress-step {% if req.status in ['APPROVED', 'REJECTED'] %}active{% endif %}">Finalized</div>
-                        </div>
-                      </td>
+                      <td>{{ progress_steps(req.status) }}</td>
                       <td>
                         {% if role == 'IT_ADMIN' and req.status == 'PENDING_IT' %}
                           <a class="btn small" href="{{ url_for('it_provision', request_id=req.id) }}">Provision</a>
