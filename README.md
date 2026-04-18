@@ -9,6 +9,9 @@ This is a **User Lifecycle Application** that manages the complete onboarding wo
 - **Flask** (3.0.3) - Lightweight Python web framework
 - **Flask-Login** - User authentication management
 - **Flask-SQLAlchemy** - ORM for database interactions
+- **Flask-CORS** - CORS support for JSON APIs
+- **Flask-Migrate** - Database schema migration support
+- **Flask-Marshmallow / marshmallow-sqlalchemy** - JSON serialization and request validation
 
 **Database:**
 - **MySQL** with PyMySQL driver - for persistent data storage
@@ -16,6 +19,8 @@ This is a **User Lifecycle Application** that manages the complete onboarding wo
 **Security & Utilities:**
 - **Werkzeug** - Password hashing and security utilities
 - **python-dotenv** - Environment variable management
+- **python-dateutil** - API date parsing/filtering utilities
+- **SQLAlchemy-Utils** - JSON-compatible model columns
 
 ---
 
@@ -153,6 +158,19 @@ IAM-Application/
 | `/approvals/<id>/approve` | POST | CISO, MGMT | Submit approval decision |
 | `/status/<id>` | GET | Authenticated | Check request status |
 
+### 🧩 **JSON API (Interactive Frontend Support)**
+
+- `GET/POST /api/requests`
+- `GET/PATCH/DELETE /api/requests/<id>`
+- `GET /api/requests/<id>/timeline`
+- `GET/POST /api/requests/<id>/comments`
+- `GET /api/approvals`, `POST /api/approvals/<id>`, `GET /api/approvals/<id>/history`
+- `GET/PATCH /api/users/profile`, `GET /api/users/<id>`
+- `GET /api/dashboard/stats`
+- `GET /api/notifications`, `POST /api/notifications/<id>/read`
+- `GET /api/search`
+- `POST /api/approvals/bulk`
+
 ---
 
 ### 🔑 **Configuration**
@@ -160,6 +178,11 @@ IAM-Application/
 The app uses environment variables (loaded from `.env`):
 - `SECRET_KEY` - Flask session encryption key
 - `DATABASE_URL` - MySQL connection string (default: `mysql+pymysql://iam_user:iam_pass@localhost:3306/iam_app`)
+
+For schema migration commands:
+- `flask db init`
+- `flask db migrate -m "schema update"`
+- `flask db upgrade`
 
 ---
 
