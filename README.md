@@ -1,7 +1,3 @@
-I'll fetch and explain the contents of the README file from your IAM Application repository.The README.md file is quite minimal. Let me explore the repository structure to give you a comprehensive explanation of the IAM Application.The README.md file in your IAM-Application repository is quite minimal. Let me get the content of the main application files to give you a comprehensive explanation:## IAM Application Overview
-
-Based on the README and codebase, here's a comprehensive explanation of your **IAM (Identity and Access Management) Application**:
-
 ### 📋 **Project Purpose**
 This is a **User Lifecycle Application** that manages the complete onboarding workflow for new employees in an organization, from request submission through resource provisioning and approval.
 
