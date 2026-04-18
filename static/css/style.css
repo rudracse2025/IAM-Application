@@ -123,7 +123,7 @@ h2 {
 .security-grid,
 .testimonial-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 }
 
@@ -188,7 +188,7 @@ h2 {
   margin-top: 0;
 }
 
-.testimonial-card cite {
+.testimonial-author {
   color: var(--muted);
   font-size: 0.9rem;
   font-style: normal;
@@ -200,7 +200,7 @@ h2 {
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
   margin-top: 2rem;
 }
