@@ -322,9 +322,7 @@ def create_app():
                 if current_user.role not in roles:
                     abort(403)
                 return func(*args, **kwargs)
-
             return wrapper
-
         return decorator
 
     def can_access_request(req):
@@ -376,6 +374,8 @@ def create_app():
                 preferences={"notifications": True, "theme": "light"},
             )
             db.session.add(user)
+            # flush first so user.id exists before creating related audit rows in same transaction
+            db.session.flush()
             _record_audit("user_signup", "User", user.id, {"email": email, "role": role})
             db.session.commit()
             flash("Account created. Please log in.", "success")
@@ -655,7 +655,17 @@ def create_app():
             writer = csv.writer(output)
             writer.writerow(["id", "employee_name", "employee_email", "status", "priority", "department", "created_at"])
             for item in rows:
-                writer.writerow([item.id, item.employee_name, item.employee_email, item.status, item.priority, item.department or "", item.created_at.isoformat() if item.created_at else ""])
+                writer.writerow(
+                    [
+                        item.id,
+                        item.employee_name,
+                        item.employee_email,
+                        item.status,
+                        item.priority,
+                        item.department or "",
+                        item.created_at.isoformat() if item.created_at else "",
+                    ]
+                )
             response = make_response(output.getvalue())
             response.headers["Content-Type"] = "text/csv"
             response.headers["Content-Disposition"] = "attachment; filename=requests.csv"
@@ -698,6 +708,7 @@ def create_app():
             updated_at=_now(),
         )
         db.session.add(req)
+        # flush before timeline/audit so request_id is available on related rows
         db.session.flush()
         _record_timeline(req.id, None, status, "Request created via API")
         _record_audit("request_created_api", "EmployeeRequest", req.id)
@@ -795,7 +806,7 @@ def create_app():
             updated_at=_now(),
         )
         db.session.add(comment)
-        _record_timeline(request_id, req.status, req.status, f"Comment added by user {current_user.id}")
+        db.session.flush()
         _record_audit("comment_added", "Comment", comment.id, {"request_id": request_id})
         db.session.commit()
         return jsonify({"item": CommentSchema().dump(comment)}), 201
@@ -952,7 +963,11 @@ def create_app():
             "pending_approval": base.filter(EmployeeRequest.status == STATUS_PENDING_APPROVAL).count(),
             "approved": base.filter(EmployeeRequest.status == STATUS_APPROVED).count(),
             "rejected": base.filter(EmployeeRequest.status == STATUS_REJECTED).count(),
-            "overdue": base.filter(EmployeeRequest.due_date.is_not(None), EmployeeRequest.due_date < _now()).count(),
+            "overdue": base.filter(
+                EmployeeRequest.due_date.is_not(None),
+                EmployeeRequest.due_date < _now(),
+                EmployeeRequest.status.in_([STATUS_PENDING_IT, STATUS_PENDING_APPROVAL]),
+            ).count(),
             "unread_notifications": Notification.query.filter_by(user_id=current_user.id, is_read=False).count(),
         }
         return jsonify({"item": stats})
@@ -1030,6 +1045,7 @@ def create_app():
             updated_at=_now(),
         )
         db.session.add(template)
+        db.session.flush()
         _record_audit("template_created", "RequestTemplate", template.id)
         db.session.commit()
         return jsonify({"item": RequestTemplateSchema().dump(template)}), 201
