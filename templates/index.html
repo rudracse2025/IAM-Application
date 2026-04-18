@@ -1,31 +1,131 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero">
-  <h1>Company IAM Portal</h1>
-  <p>Secure identity and access management for HR, IT, CISO, and Management teams.</p>
-  <div class="cta">
-    <a class="btn" href="{{ url_for('login') }}">Login</a>
-    <a class="btn secondary" href="{{ url_for('signup') }}">Sign Up</a>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="eyebrow">Enterprise Identity Governance</p>
+  <h1 id="hero-title">Secure employee onboarding without slowing down your teams.</h1>
+  <p class="hero-subtitle">
+    Company IAM unifies HR requests, IT provisioning, and security approvals into a single governed workflow with audit-ready visibility.
+  </p>
+
+  <ul class="hero-benefits" aria-label="Platform benefits">
+    <li>Role-based approvals with clear accountability</li>
+    <li>Tenant and domain isolation for multi-company safety</li>
+    <li>End-to-end request tracking from submission to final decision</li>
+  </ul>
+
+  <div class="cta" role="group" aria-label="Primary actions">
+    <a class="btn" href="{{ url_for('login') }}" aria-label="Login to Company IAM">Login</a>
+    <a class="btn secondary" href="{{ url_for('signup') }}" aria-label="Create a Company IAM account">Sign Up</a>
   </div>
 </section>
 
-<section class="info-grid">
-  <div>
-    <h3>HR Requests</h3>
-    <p>Create onboarding requests for new employees and track status.</p>
+<section class="feature-section" aria-labelledby="features-title">
+  <h2 id="features-title">Core capabilities built for HR, IT, and Security teams</h2>
+  <div class="feature-grid">
+    <article class="feature-card">
+      <div class="feature-icon" aria-hidden="true">👥</div>
+      <h3>HR Requests</h3>
+      <p>Submit standardized onboarding requests with employee details and track request state in real time.</p>
+      <p class="feature-meta">Best for: HR operations and hiring coordinators.</p>
+    </article>
+
+    <article class="feature-card">
+      <div class="feature-icon" aria-hidden="true">💻</div>
+      <h3>IT Provisioning</h3>
+      <p>Assign user IDs, licenses, and security groups through a guided provisioning workflow.</p>
+      <p class="feature-meta">Best for: IT administrators managing access and tooling.</p>
+    </article>
+
+    <article class="feature-card">
+      <div class="feature-icon" aria-hidden="true">✅</div>
+      <h3>Dual Approvals</h3>
+      <p>Require CISO and Management approvals before finalizing access to enforce governance controls.</p>
+      <p class="feature-meta">Best for: Security and executive oversight.</p>
+    </article>
+
+    <article class="feature-card">
+      <div class="feature-icon" aria-hidden="true">🏢</div>
+      <h3>Tenant Isolation</h3>
+      <p>Domain-based data scoping ensures each organization only accesses its own requests and records.</p>
+      <p class="feature-meta">Best for: Multi-tenant and partner-facing operations.</p>
+    </article>
   </div>
-  <div>
-    <h3>IT Provisioning</h3>
-    <p>Assign licenses, security groups, and provision user IDs securely.</p>
+</section>
+
+<section class="security-section" aria-labelledby="security-title">
+  <h2 id="security-title">Security &amp; compliance at every stage</h2>
+  <div class="security-grid">
+    <article>
+      <h3>Role-based access control</h3>
+      <p>Users can only access workflows allowed by their assigned role (HR, IT, CISO, Management).</p>
+    </article>
+    <article>
+      <h3>Domain and data isolation</h3>
+      <p>Access is scoped by organization domain to prevent cross-tenant data exposure.</p>
+    </article>
+    <article>
+      <h3>Audit-ready accountability</h3>
+      <p>Provisioning and approval actions are tied to users and roles, supporting governance review needs.</p>
+    </article>
   </div>
-  <div>
-    <h3>Approvals</h3>
-    <p>CISO and Management approvals ensure governance and compliance.</p>
+</section>
+
+<section class="workflow-section" aria-labelledby="workflow-title">
+  <h2 id="workflow-title">How onboarding moves from request to approval</h2>
+  <ol class="workflow-steps">
+    <li>
+      <span class="step-number" aria-hidden="true">1</span>
+      <div>
+        <h3>HR submits request</h3>
+        <p>Employee details are captured and the request enters the IT queue.</p>
+      </div>
+    </li>
+    <li>
+      <span class="step-number" aria-hidden="true">2</span>
+      <div>
+        <h3>IT provisions access</h3>
+        <p>IT defines account, licensing, and security-group assignments.</p>
+      </div>
+    </li>
+    <li>
+      <span class="step-number" aria-hidden="true">3</span>
+      <div>
+        <h3>CISO and Management review</h3>
+        <p>Both stakeholders approve or reject to finalize governance decisions.</p>
+      </div>
+    </li>
+    <li>
+      <span class="step-number" aria-hidden="true">4</span>
+      <div>
+        <h3>Status is tracked centrally</h3>
+        <p>Teams can monitor each request and decision from one dashboard.</p>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<section class="testimonial-section" aria-labelledby="trust-title">
+  <h2 id="trust-title">Trusted workflow outcomes</h2>
+  <p class="testimonial-note">Illustrative feedback from common IAM stakeholders.</p>
+  <div class="testimonial-grid">
+    <article class="testimonial-card">
+      <p>“Our HR-to-IT handoff is now consistent, auditable, and much faster.”</p>
+      <p class="testimonial-author">HR Operations Lead</p>
+    </article>
+    <article class="testimonial-card">
+      <p>“Approval gates gave us stronger control without creating extra email overhead.”</p>
+      <p class="testimonial-author">Security Program Manager</p>
+    </article>
+    <article class="testimonial-card">
+      <p>“Clear status tracking reduced back-and-forth and improved onboarding transparency.”</p>
+      <p class="testimonial-author">IT Service Owner</p>
+    </article>
   </div>
-  <div>
-    <h3>Tenant Isolation</h3>
-    <p>Domain-based access ensures each company only sees its own data.</p>
+
+  <div class="cta cta-secondary" role="group" aria-label="Authentication actions">
+    <a class="btn" href="{{ url_for('signup') }}">Create Account</a>
+    <a class="btn secondary" href="{{ url_for('login') }}">Login to Continue</a>
   </div>
 </section>
 {% endblock %}
