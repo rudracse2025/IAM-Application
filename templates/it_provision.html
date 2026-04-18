@@ -1,21 +1,64 @@
 {% extends "base.html" %}
+{% block title %}IT Provisioning · Company IAM{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{{ url_for('dashboard') }}">Dashboard</a> / IT Provisioning</nav>
+{% endblock %}
 
 {% block content %}
-<div class="card">
-  <h2>Provision User ID</h2>
-  <p><strong>{{ request_item.employee_name }}</strong> ({{ request_item.employee_email }})</p>
-  <form method="post">
-    <label>IT User ID</label>
-    <input type="text" name="it_user_id" required>
-    <label>Microsoft License</label>
-    <select name="license_type" required>
-      <option value="M365 Business Premium">M365 Business Premium</option>
-      <option value="M365 E3">M365 E3</option>
-      <option value="M365 E5">M365 E5</option>
-    </select>
-    <label>Security Groups (comma separated)</label>
-    <input type="text" name="security_groups">
-    <button type="submit" class="btn">Send for Approval</button>
+<section class="card" aria-labelledby="provision-title">
+  <h2 id="provision-title">Provision employee access</h2>
+  <p class="muted"><strong>{{ request_item.employee_name }}</strong> · {{ request_item.employee_email }}</p>
+
+  <form method="post" data-stepper data-confirm-message="Send this provisioning request for security and management approval?" novalidate>
+    <div class="step-panel" data-step-panel>
+      <details open>
+        <summary><strong>Step 1: Account identity</strong></summary>
+        <div class="field-group" style="margin-top: 0.7rem;">
+          <label for="it_user_id">IT user ID</label>
+          <input id="it_user_id" type="text" name="it_user_id" required>
+          <div class="validation-hint"></div>
+        </div>
+      </details>
+      <div class="stepper-actions">
+        <span></span>
+        <button type="button" class="btn" data-step-next>Next</button>
+      </div>
+    </div>
+
+    <div class="step-panel" data-step-panel hidden>
+      <details open>
+        <summary><strong>Step 2: License and security groups</strong></summary>
+
+        <div class="field-group" style="margin-top: 0.7rem;">
+          <label for="license_type">License type</label>
+          <select id="license_type" name="license_type" required>
+            <option value="">Select a license</option>
+            <option value="M365 Business Premium">M365 Business Premium</option>
+            <option value="M365 E3">M365 E3</option>
+            <option value="M365 E5">M365 E5</option>
+          </select>
+          <div class="validation-hint"></div>
+        </div>
+
+        <div class="field-group">
+          <label>Security groups</label>
+          <div class="group-chips" aria-label="Security groups multi select">
+            <label><input type="checkbox" data-security-group value="VPN_Access"> VPN_Access</label>
+            <label><input type="checkbox" data-security-group value="Engineering_Team"> Engineering_Team</label>
+            <label><input type="checkbox" data-security-group value="Finance_ReadOnly"> Finance_ReadOnly</label>
+            <label><input type="checkbox" data-security-group value="SSO_Required"> SSO_Required</label>
+          </div>
+          <input type="hidden" name="security_groups" value="">
+          <small class="muted">Selected groups are added as comma-separated values.</small>
+        </div>
+      </details>
+
+      <div class="stepper-actions">
+        <button type="button" class="btn secondary" data-step-back>Back</button>
+        <button type="submit" class="btn" data-loading-text="Submitting provisioning">Send for approval</button>
+      </div>
+    </div>
   </form>
-</div>
+</section>
 {% endblock %}

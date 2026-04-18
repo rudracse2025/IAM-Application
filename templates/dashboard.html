@@ -1,42 +1,101 @@
 {% extends "base.html" %}
+{% block title %}Dashboard · Company IAM{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{{ url_for('index') }}">Home</a> / Dashboard</nav>
+{% endblock %}
+
+{% macro status_badge(status) -%}
+  {% if status == 'PENDING_IT' %}
+    <span class="status-badge status-pending">Pending IT</span>
+  {% elif status == 'PENDING_APPROVAL' %}
+    <span class="status-badge status-progress">Pending Approval</span>
+  {% elif status == 'APPROVED' %}
+    <span class="status-badge status-approved">Approved</span>
+  {% else %}
+    <span class="status-badge status-rejected">Rejected</span>
+  {% endif %}
+{%- endmacro %}
 
 {% block content %}
-<div class="dashboard">
+<section class="card">
   <h2>Dashboard</h2>
+  <p class="muted">Use tabs and search to work through onboarding requests quickly.</p>
 
-  {% if role == 'HR' %}
-    <a class="btn" href="{{ url_for('hr_new_request') }}">New HR Request</a>
-  {% endif %}
+  <div class="inline-actions">
+    {% if role == 'HR' %}
+      <a class="btn" href="{{ url_for('hr_new_request') }}">New HR Request</a>
+    {% endif %}
+    {% if role in ['CISO', 'MANAGEMENT'] %}
+      <a class="btn secondary" href="{{ url_for('approvals') }}">Pending Approvals</a>
+    {% endif %}
+    <button type="button" class="btn secondary" data-bulk-open>Open selected status pages</button>
+  </div>
 
-  {% if role in ['CISO', 'MANAGEMENT'] %}
-    <a class="btn" href="{{ url_for('approvals') }}">Pending Approvals</a>
-  {% endif %}
+  <div class="field-group" style="margin-top: 0.8rem;">
+    <label for="request-search">Search requests</label>
+    <input id="request-search" type="search" placeholder="Search by employee, email, or status" data-search-input=".requests-table-body" aria-label="Search requests">
+    <small class="muted">Shortcut: press / to focus search</small>
+  </div>
 
-  <div class="table">
-    <div class="table-header">
-      <span>Employee</span>
-      <span>Email</span>
-      <span>Status</span>
-      <span>Action</span>
+  <div data-tab-container>
+    <div class="tabs" role="tablist" aria-label="Request categories">
+      <button type="button" class="tab-btn" data-tab-target="all">All</button>
+      <button type="button" class="tab-btn" data-tab-target="pending">Pending</button>
+      <button type="button" class="tab-btn" data-tab-target="resolved">Resolved</button>
     </div>
-    {% for req in requests %}
-      <div class="table-row">
-        <span>{{ req.employee_name }}</span>
-        <span>{{ req.employee_email }}</span>
-        <span>{{ req.status }}</span>
-        <span>
-          {% if role == 'IT_ADMIN' and req.status == 'PENDING_IT' %}
-            <a class="btn small" href="{{ url_for('it_provision', request_id=req.id) }}">Provision</a>
-          {% else %}
-            <a class="btn small secondary" href="{{ url_for('request_status', request_id=req.id) }}">View</a>
-          {% endif %}
-        </span>
-      </div>
-    {% else %}
-      <div class="table-row">
-        <span>No requests found.</span>
+
+    {% for tab in ['all', 'pending', 'resolved'] %}
+      <div class="tab-panel" data-tab-panel="{{ tab }}">
+        {% if requests %}
+          <div class="table">
+            <table>
+              <thead>
+                <tr>
+                  <th><input type="checkbox" data-bulk-master aria-label="Select all"></th>
+                  <th>Employee</th>
+                  <th>Email</th>
+                  <th>Status</th>
+                  <th>Progress</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody class="requests-table-body">
+                {% for req in requests %}
+                  {% set is_pending = req.status in ['PENDING_IT', 'PENDING_APPROVAL'] %}
+                  {% if tab == 'all' or (tab == 'pending' and is_pending) or (tab == 'resolved' and not is_pending) %}
+                    <tr data-filter-item>
+                      <td>
+                        <input type="checkbox" data-bulk-item data-url="{{ url_for('request_status', request_id=req.id) }}" aria-label="Select request {{ req.id }}">
+                      </td>
+                      <td>{{ req.employee_name }}</td>
+                      <td>{{ req.employee_email }}</td>
+                      <td>{{ status_badge(req.status) }}</td>
+                      <td>
+                        <div class="progress-track">
+                          <div class="progress-step {% if req.status in ['PENDING_IT', 'PENDING_APPROVAL', 'APPROVED', 'REJECTED'] %}active{% endif %}">Requested</div>
+                          <div class="progress-step {% if req.status in ['PENDING_APPROVAL', 'APPROVED', 'REJECTED'] %}active{% endif %}">Provisioned</div>
+                          <div class="progress-step {% if req.status in ['APPROVED', 'REJECTED'] %}active{% endif %}">Finalized</div>
+                        </div>
+                      </td>
+                      <td>
+                        {% if role == 'IT_ADMIN' and req.status == 'PENDING_IT' %}
+                          <a class="btn small" href="{{ url_for('it_provision', request_id=req.id) }}">Provision</a>
+                        {% else %}
+                          <a class="btn small secondary" href="{{ url_for('request_status', request_id=req.id) }}">View</a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="empty-state">No requests found yet. New requests will appear here.</div>
+        {% endif %}
       </div>
     {% endfor %}
   </div>
-</div>
+</section>
 {% endblock %}

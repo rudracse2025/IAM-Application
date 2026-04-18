@@ -1,31 +1,57 @@
 {% extends "base.html" %}
+{% block title %}Home · Company IAM{% endblock %}
 
 {% block content %}
-<section class="hero">
-  <h1>Company IAM Portal</h1>
-  <p>Secure identity and access management for HR, IT, CISO, and Management teams.</p>
-  <div class="cta">
-    <a class="btn" href="{{ url_for('login') }}">Login</a>
-    <a class="btn secondary" href="{{ url_for('signup') }}">Sign Up</a>
+<section class="hero" aria-labelledby="hero-title">
+  <h1 id="hero-title">Secure identity lifecycle, end to end</h1>
+  <p>Unify HR onboarding, IT provisioning, and executive approvals in one responsive workflow experience.</p>
+  <div class="inline-actions">
+    <a class="btn" href="{{ url_for('login') }}">Open Portal</a>
+    <a class="btn secondary" href="{{ url_for('signup') }}">Create Account</a>
   </div>
 </section>
 
-<section class="info-grid">
-  <div>
-    <h3>HR Requests</h3>
-    <p>Create onboarding requests for new employees and track status.</p>
-  </div>
-  <div>
-    <h3>IT Provisioning</h3>
-    <p>Assign licenses, security groups, and provision user IDs securely.</p>
-  </div>
-  <div>
-    <h3>Approvals</h3>
-    <p>CISO and Management approvals ensure governance and compliance.</p>
-  </div>
-  <div>
-    <h3>Tenant Isolation</h3>
-    <p>Domain-based access ensures each company only sees its own data.</p>
-  </div>
+<section class="panel-grid" style="margin-top: 1rem;">
+  <article class="card">
+    <h3>HR Request Hub</h3>
+    <p class="muted">Create employee requests with clear validation and live preview.</p>
+  </article>
+  <article class="card">
+    <h3>IT Provisioning Wizard</h3>
+    <p class="muted">Guide provisioning with grouped steps, license selection, and security profiles.</p>
+  </article>
+  <article class="card">
+    <h3>Approval Workspace</h3>
+    <p class="muted">Review side-by-side request context and execute one-click decisions.</p>
+  </article>
+  <article class="card">
+    <h3>Status Timeline</h3>
+    <p class="muted">Track lifecycle stages with badges and detailed progression history.</p>
+  </article>
+</section>
+
+<section class="split" style="margin-top: 1rem;">
+  <article class="card">
+    <h3>System status</h3>
+    <p><span class="status-badge status-approved">API Operational</span></p>
+    <p><span class="status-badge status-progress">Approvals Queue Active</span></p>
+    <p><span class="status-badge status-pending">Monitoring Enabled</span></p>
+  </article>
+
+  <article class="card">
+    <h3>FAQ</h3>
+    <details>
+      <summary>Who can create requests?</summary>
+      <p class="muted">HR users can create employee onboarding requests.</p>
+    </details>
+    <details>
+      <summary>When does a request become approved?</summary>
+      <p class="muted">After both CISO and Management submit APPROVED decisions.</p>
+    </details>
+    <details>
+      <summary>Can I track progress?</summary>
+      <p class="muted">Yes, each request has a dedicated lifecycle status view.</p>
+    </details>
+  </article>
 </section>
 {% endblock %}
