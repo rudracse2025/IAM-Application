@@ -192,7 +192,21 @@ def create_app():
     @role_required(ROLE_CISO, ROLE_MGMT)
     def approvals():
         requests_pending = EmployeeRequest.query.filter_by(domain=current_user.domain, status=STATUS_PENDING_APPROVAL).order_by(EmployeeRequest.created_at.desc()).all()
-        return render_template("approvals.html", requests=requests_pending)
+        request_ids = [item.id for item in requests_pending]
+        provisioning_items = Provisioning.query.filter(Provisioning.request_id.in_(request_ids)).all() if request_ids else []
+        approvals_items = Approval.query.filter(Approval.request_id.in_(request_ids)).order_by(Approval.created_at.desc()).all() if request_ids else []
+
+        provisioning_map = {item.request_id: item for item in provisioning_items}
+        approval_map = {}
+        for item in approvals_items:
+            approval_map.setdefault(item.request_id, []).append(item)
+
+        return render_template(
+            "approvals.html",
+            requests=requests_pending,
+            provisioning_map=provisioning_map,
+            approval_map=approval_map,
+        )
 
     @app.route("/approvals/<int:request_id>/approve", methods=["POST"])
     @login_required
@@ -237,7 +251,9 @@ def create_app():
     @login_required
     def request_status(request_id):
         req = EmployeeRequest.query.filter_by(id=request_id, domain=current_user.domain).first_or_404()
-        return render_template("status.html", request_item=req)
+        provisioning = Provisioning.query.filter_by(request_id=req.id).order_by(Provisioning.created_at.desc()).first()
+        approvals = Approval.query.filter_by(request_id=req.id).order_by(Approval.created_at.asc()).all()
+        return render_template("status.html", request_item=req, provisioning=provisioning, approvals=approvals)
 
     return app
 

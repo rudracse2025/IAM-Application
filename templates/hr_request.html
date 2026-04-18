@@ -1,14 +1,56 @@
 {% extends "base.html" %}
+{% block title %}New HR Request · Company IAM{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{{ url_for('dashboard') }}">Dashboard</a> / New HR Request</nav>
+{% endblock %}
 
 {% block content %}
-<div class="card">
-  <h2>New Employee Request</h2>
-  <form method="post">
-    <label>Employee Name</label>
-    <input type="text" name="employee_name" required>
-    <label>Employee Email</label>
-    <input type="email" name="employee_email" required>
-    <button type="submit" class="btn">Submit Request</button>
-  </form>
-</div>
+<section class="split">
+  <article class="card" aria-labelledby="hr-title">
+    <h2 id="hr-title">Create employee request</h2>
+    <p class="muted">Fill in employee details. A preview updates in real time.</p>
+
+    <form method="post" data-confirm-message="Submit this HR request to IT provisioning?" novalidate>
+      <div class="field-group">
+        <label for="employee_name">Employee name</label>
+        <input id="employee_name" type="text" name="employee_name" required>
+        <div class="validation-hint"></div>
+      </div>
+
+      <div class="field-group">
+        <label for="employee_email">Employee email</label>
+        <input id="employee_email" type="email" name="employee_email" required>
+        <div class="validation-hint"></div>
+      </div>
+
+      <button type="submit" class="btn" data-loading-text="Submitting request">Submit request</button>
+    </form>
+  </article>
+
+  <aside class="card" aria-live="polite">
+    <h3>Submission preview</h3>
+    <p><strong>Name:</strong> <span id="preview-name">—</span></p>
+    <p><strong>Email:</strong> <span id="preview-email">—</span></p>
+    <p><strong>Status:</strong> <span class="status-badge status-pending">Will start as Pending IT</span></p>
+  </aside>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const nameInput = document.getElementById('employee_name');
+    const emailInput = document.getElementById('employee_email');
+    const namePreview = document.getElementById('preview-name');
+    const emailPreview = document.getElementById('preview-email');
+
+    const update = () => {
+      namePreview.textContent = nameInput.value || '—';
+      emailPreview.textContent = emailInput.value || '—';
+    };
+
+    nameInput.addEventListener('input', update);
+    emailInput.addEventListener('input', update);
+    update();
+  });
+</script>
 {% endblock %}

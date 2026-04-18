@@ -3,36 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Company IAM</title>
+  <title>{% block title %}Company IAM{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <nav>
-    <div class="brand">Company IAM</div>
-    <div class="nav-links">
+  <header class="topbar" role="banner" aria-label="Main navigation">
+    <div class="brand-wrap">
+      <a class="brand" href="{{ url_for('index') }}">Company IAM</a>
+    </div>
+
+    <nav aria-label="Primary navigation">
       {% if current_user.is_authenticated %}
-        <span class="nav-meta">{{ current_user.email }} ({{ current_user.role }})</span>
         <a href="{{ url_for('dashboard') }}">Dashboard</a>
-        <a href="{{ url_for('logout') }}">Logout</a>
+        {% if current_user.role in ['CISO', 'MANAGEMENT'] %}
+          <a href="{{ url_for('approvals') }}">Approvals</a>
+        {% endif %}
+
+        <div class="notification-center">
+          <button type="button" class="notification-bell" data-notification-trigger aria-label="Open notifications">Notifications</button>
+          <div class="notification-panel" data-notification-menu>
+            <strong>Notification Center</strong>
+            <p class="muted">No new alerts. Updates appear here after workflow actions.</p>
+          </div>
+        </div>
+
+        <div class="profile-menu">
+          <button type="button" class="profile-trigger" data-profile-trigger aria-haspopup="true" aria-expanded="false">
+            {{ current_user.email.split('@')[0] }} ▾
+          </button>
+          <section class="dropdown" data-profile-menu>
+            <p><strong>{{ current_user.email }}</strong></p>
+            <p>Role: <span class="status-badge status-progress">{{ current_user.role }}</span></p>
+            <p>Domain: {{ current_user.domain }}</p>
+            <a class="btn small secondary" href="{{ url_for('logout') }}">Logout</a>
+          </section>
+        </div>
       {% else %}
         <a href="{{ url_for('login') }}">Login</a>
         <a href="{{ url_for('signup') }}">Sign Up</a>
       {% endif %}
-    </div>
-  </nav>
+    </nav>
+  </header>
 
-  <main>
+  <div class="toast-container" aria-live="polite">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        <div class="flash-container">
-          {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
-          {% endfor %}
-        </div>
+        {% for category, message in messages %}
+          <div class="toast {{ category }}" data-timeout="4500" role="{{ 'alert' if category in ['danger', 'warning'] else 'status' }}">{{ message }}</div>
+        {% endfor %}
       {% endif %}
     {% endwith %}
+  </div>
 
+  <main class="container" role="main">
+    {% block breadcrumbs %}{% endblock %}
     {% block content %}{% endblock %}
   </main>
+
+  <div class="modal" data-confirm-modal role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal-body">
+      <h3 id="confirm-title">Confirm action</h3>
+      <p data-confirm-text>Are you sure you want to continue?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn secondary" data-confirm-no>Cancel</button>
+        <button type="button" class="btn" data-confirm-yes>Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
 </body>
 </html>

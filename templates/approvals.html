@@ -1,32 +1,73 @@
 {% extends "base.html" %}
+{% block title %}Approvals · Company IAM{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{{ url_for('dashboard') }}">Dashboard</a> / Approvals</nav>
+{% endblock %}
 
 {% block content %}
-<div class="dashboard">
-  <h2>Pending Approvals</h2>
-  <div class="table">
-    <div class="table-header">
-      <span>Employee</span>
-      <span>Email</span>
-      <span>Status</span>
-      <span>Decision</span>
-    </div>
-    {% for req in requests %}
-      <div class="table-row">
-        <span>{{ req.employee_name }}</span>
-        <span>{{ req.employee_email }}</span>
-        <span>{{ req.status }}</span>
-        <span>
-          <form method="post" action="{{ url_for('approve_request', request_id=req.id) }}" class="inline-form">
-            <button class="btn small" name="decision" value="APPROVED">Approve</button>
-            <button class="btn small secondary" name="decision" value="REJECTED">Reject</button>
+<section class="card">
+  <h2>Pending approvals</h2>
+  <p class="muted">Review request and provisioning details side by side, then submit your decision.</p>
+
+  {% if requests %}
+    <div class="panel-grid">
+      {% for req in requests %}
+        {% set provision = provisioning_map.get(req.id) %}
+        {% set history = approval_map.get(req.id, []) %}
+        <article class="card" data-filter-item>
+          <h3>{{ req.employee_name }}</h3>
+          <p class="muted">{{ req.employee_email }}</p>
+
+          <div class="split">
+            <section>
+              <h4>Request details</h4>
+              <p><strong>Status:</strong> <span class="status-badge status-progress">{{ req.status }}</span></p>
+              <p><strong>Request ID:</strong> #{{ req.id }}</p>
+              <p><strong>Created:</strong> {{ req.created_at.strftime('%Y-%m-%d %H:%M') if req.created_at else 'N/A' }}</p>
+            </section>
+
+            <section>
+              <h4>Provisioning details</h4>
+              {% if provision %}
+                <p><strong>User ID:</strong> {{ provision.it_user_id }}</p>
+                <p><strong>License:</strong> {{ provision.license_type }}</p>
+                <p><strong>Groups:</strong> {{ provision.security_groups or 'None' }}</p>
+              {% else %}
+                <p class="muted">Provisioning details not available yet.</p>
+              {% endif %}
+            </section>
+          </div>
+
+          <details>
+            <summary>Approval history timeline</summary>
+            <div class="timeline" style="margin-top: 0.5rem;">
+              {% for item in history %}
+                <div class="timeline-item">
+                  <strong>{{ item.role }}</strong> — {{ item.status }}
+                  <div class="muted">{{ item.created_at.strftime('%Y-%m-%d %H:%M') if item.created_at else 'N/A' }}</div>
+                </div>
+              {% else %}
+                <div class="timeline-item"><span class="muted">No prior decisions recorded.</span></div>
+              {% endfor %}
+            </div>
+          </details>
+
+          <form method="post" action="{{ url_for('approve_request', request_id=req.id) }}" data-confirm-message="Submit your approval decision for {{ req.employee_name }}?">
+            <div class="field-group">
+              <label for="comment_{{ req.id }}">Comments / Notes</label>
+              <textarea id="comment_{{ req.id }}" name="comment" rows="2" placeholder="Optional notes for audit"></textarea>
+            </div>
+            <div class="inline-actions">
+              <button class="btn small" name="decision" value="APPROVED" data-loading-text="Submitting">Approve</button>
+              <button class="btn small danger" name="decision" value="REJECTED" data-loading-text="Submitting">Reject</button>
+            </div>
           </form>
-        </span>
-      </div>
-    {% else %}
-      <div class="table-row">
-        <span>No pending approvals.</span>
-      </div>
-    {% endfor %}
-  </div>
-</div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">No pending approvals right now.</div>
+  {% endif %}
+</section>
 {% endblock %}

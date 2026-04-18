@@ -1,10 +1,82 @@
 {% extends "base.html" %}
+{% block title %}Request Status · Company IAM{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{{ url_for('dashboard') }}">Dashboard</a> / Request Status</nav>
+{% endblock %}
 
 {% block content %}
-<div class="card">
-  <h2>Request Status</h2>
-  <p><strong>Employee:</strong> {{ request_item.employee_name }}</p>
-  <p><strong>Email:</strong> {{ request_item.employee_email }}</p>
-  <p><strong>Status:</strong> {{ request_item.status }}</p>
-</div>
+<section class="split">
+  <article class="card">
+    <h2>Request lifecycle</h2>
+    <p><strong>Employee:</strong> {{ request_item.employee_name }}</p>
+    <p><strong>Email:</strong> {{ request_item.employee_email }}</p>
+    <p>
+      <strong>Current status:</strong>
+      {% if request_item.status == 'PENDING_IT' %}
+        <span class="status-badge status-pending">Pending IT</span>
+      {% elif request_item.status == 'PENDING_APPROVAL' %}
+        <span class="status-badge status-progress">Pending Approval</span>
+      {% elif request_item.status == 'APPROVED' %}
+        <span class="status-badge status-approved">Approved</span>
+      {% else %}
+        <span class="status-badge status-rejected">Rejected</span>
+      {% endif %}
+    </p>
+
+    <div class="inline-actions">
+      <button type="button" class="btn secondary" onclick="window.print()">Print view</button>
+      <button type="button" class="btn secondary" id="share-status">Share link</button>
+    </div>
+  </article>
+
+  <article class="card">
+    <h3>Timeline</h3>
+    <div class="timeline">
+      <div class="timeline-item">
+        <strong>Request created</strong>
+        <div class="muted">{{ request_item.created_at.strftime('%Y-%m-%d %H:%M') if request_item.created_at else 'N/A' }}</div>
+      </div>
+
+      {% if provisioning %}
+        <details class="timeline-item" open>
+          <summary><strong>IT provisioning submitted</strong></summary>
+          <p class="muted">User ID: {{ provisioning.it_user_id }}, License: {{ provisioning.license_type }}</p>
+          <p class="muted">Groups: {{ provisioning.security_groups or 'None' }}</p>
+        </details>
+      {% endif %}
+
+      {% for item in approvals %}
+        <details class="timeline-item">
+          <summary><strong>{{ item.role }} decision: {{ item.status }}</strong></summary>
+          <p class="muted">Recorded: {{ item.created_at.strftime('%Y-%m-%d %H:%M') if item.created_at else 'N/A' }}</p>
+        </details>
+      {% endfor %}
+
+      <div class="timeline-item">
+        <strong>Latest system state</strong>
+        <div class="muted">{{ request_item.status }}</div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const shareBtn = document.getElementById('share-status');
+    shareBtn?.addEventListener('click', async () => {
+      const url = window.location.href;
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: 'IAM Request Status', url });
+        } else {
+          await navigator.clipboard.writeText(url);
+          alert('Status link copied to clipboard.');
+        }
+      } catch (error) {
+        alert('Unable to share automatically. Please copy the page URL from your browser.');
+      }
+    });
+  });
+</script>
 {% endblock %}
