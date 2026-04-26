@@ -4,24 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Company IAM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
-  <nav>
-    <div class="brand">Company IAM</div>
-    <div class="nav-links">
-      {% if current_user.is_authenticated %}
-        <span class="nav-meta">{{ current_user.email }} ({{ current_user.role }})</span>
-        <a href="{{ url_for('dashboard') }}">Dashboard</a>
-        <a href="{{ url_for('logout') }}">Logout</a>
-      {% else %}
-        <a href="{{ url_for('login') }}">Login</a>
-        <a href="{{ url_for('signup') }}">Sign Up</a>
-      {% endif %}
-    </div>
-  </nav>
+{% set page_class %}{% block page_class %}{% endblock %}{% endset %}
+{% set show_nav %}{% block show_nav %}true{% endblock %}{% endset %}
+<body class="{{ page_class|trim }}">
+  <div class="page-shell {% if page_class|trim %}{{ page_class|trim }}{% endif %}">
+    {% if show_nav|trim != 'false' %}
+    <nav class="top-nav">
+      <a class="brand" href="{{ url_for('index') }}">
+        <span class="brand-icon"></span>
+        <span>Company IAM</span>
+      </a>
+      <div class="nav-links">
+        {% if current_user.is_authenticated %}
+          <span class="nav-meta">{{ current_user.email }} ({{ current_user.role }})</span>
+          <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+          <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+          <a class="nav-link nav-link-primary" href="{{ url_for('login') }}">Login</a>
+          <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
+        {% endif %}
+      </div>
+    </nav>
+    {% endif %}
 
-  <main>
+    <main>
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div class="flash-container">
@@ -33,6 +44,7 @@
     {% endwith %}
 
     {% block content %}{% endblock %}
-  </main>
+    </main>
+  </div>
 </body>
 </html>

@@ -1,22 +1,57 @@
 {% extends "base.html" %}
 
+{% block page_class %}auth-page{% endblock %}
+{% block show_nav %}false{% endblock %}
+
 {% block content %}
-<div class="card">
-  <h2>Create Account</h2>
-  <form method="post">
-    <label>Work Email</label>
-    <input type="email" name="email" required>
-    <label>Password</label>
-    <input type="password" name="password" required>
-    <label>Role</label>
-    <select name="role" required>
-      {% for key, label in roles.items() %}
-        <option value="{{ key }}">{{ label }}</option>
-      {% endfor %}
-    </select>
-    <label>Company Domain</label>
-    <input type="text" name="domain" placeholder="bluvium.com" required>
-    <button type="submit" class="btn">Sign Up</button>
-  </form>
-</div>
+<section class="auth-shell">
+  <aside class="auth-left">
+    <div class="auth-brand">
+      <span class="brand-icon"></span>
+      <span>Company IAM</span>
+    </div>
+    <h1>Join your team's IAM workspace</h1>
+    <p>Select your role. Your access level and workflows are automatically configured based on what you choose.</p>
+
+    <ul class="auth-points signup-points">
+      <li><strong>HR</strong> - Submit onboarding requests</li>
+      <li><strong>IT Admin</strong> - Provision accounts and licenses</li>
+      <li><strong>CISO</strong> - Security approval authority</li>
+      <li><strong>Management</strong> - Business approval authority</li>
+    </ul>
+  </aside>
+
+  <div class="auth-right">
+    <h2>Create your account</h2>
+    <p class="auth-subtitle">All fields are required</p>
+
+    <form method="post" class="auth-form">
+      <label>Work Email</label>
+      <input type="email" name="email" placeholder="you@company.com" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Min. 8 characters" required>
+
+      <div class="double-field-row">
+        <div>
+          <label>Role</label>
+          <select name="role" required>
+            {% for key, label in roles.items() %}
+              <option value="{{ key }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>Company Domain</label>
+          <input type="text" name="domain" placeholder="bluvium.com" required>
+          <p class="input-help">Scopes your data to your org only</p>
+        </div>
+      </div>
+
+      <button type="submit" class="auth-submit">Create account</button>
+    </form>
+
+    <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+  </div>
+</section>
 {% endblock %}

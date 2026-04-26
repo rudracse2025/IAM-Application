@@ -1,31 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero">
-  <h1>Company IAM Portal</h1>
-  <p>Secure identity and access management for HR, IT, CISO, and Management teams.</p>
-  <div class="cta">
-    <a class="btn" href="{{ url_for('login') }}">Login</a>
-    <a class="btn secondary" href="{{ url_for('signup') }}">Sign Up</a>
+<section class="hero-panel">
+  <p class="hero-kicker">Enterprise Identity Platform</p>
+  <h1>Secure Employee Onboarding,<br>Start to Finish</h1>
+  <p class="hero-subtitle">A role-based IAM portal for HR, IT Admin, CISO, and Management with full audit trails and domain-level tenant isolation.</p>
+  <div class="hero-actions">
+    <a class="btn" href="{{ url_for('login') }}">Sign in to portal</a>
+    <a class="btn btn-outline" href="{{ url_for('signup') }}">Learn more</a>
   </div>
 </section>
 
-<section class="info-grid">
-  <div>
+<section class="feature-grid">
+  <article class="feature-card">
+    <span class="feature-icon icon-hr"></span>
     <h3>HR Requests</h3>
-    <p>Create onboarding requests for new employees and track status.</p>
-  </div>
-  <div>
+    <p>Submit new employee onboarding requests with name and email, routed automatically to IT Admin for provisioning.</p>
+    <span class="role-badge role-hr">HR</span>
+  </article>
+  <article class="feature-card">
+    <span class="feature-icon icon-it"></span>
     <h3>IT Provisioning</h3>
-    <p>Assign licenses, security groups, and provision user IDs securely.</p>
-  </div>
-  <div>
-    <h3>Approvals</h3>
-    <p>CISO and Management approvals ensure governance and compliance.</p>
-  </div>
-  <div>
+    <p>Assign Microsoft 365 licenses, create user IDs, and configure security group memberships for new employees.</p>
+    <span class="role-badge role-it">IT Admin</span>
+  </article>
+  <article class="feature-card">
+    <span class="feature-icon icon-ciso"></span>
+    <h3>Dual Approvals</h3>
+    <p>Both CISO and Management must approve before access is granted, enforcing governance and compliance controls.</p>
+    <div class="role-group">
+      <span class="role-badge role-ciso">CISO</span>
+      <span class="role-badge role-management">Management</span>
+    </div>
+  </article>
+  <article class="feature-card">
+    <span class="feature-icon icon-all"></span>
     <h3>Tenant Isolation</h3>
-    <p>Domain-based access ensures each company only sees its own data.</p>
-  </div>
+    <p>Domain-scoped data ensures each company sees only its own users, requests, and provisioning activity.</p>
+    <span class="role-badge role-all">All Roles</span>
+  </article>
 </section>
 {% endblock %}

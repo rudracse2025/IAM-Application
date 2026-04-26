@@ -1,42 +1,124 @@
 {% extends "base.html" %}
 
+{% block page_class %}dashboard-page{% endblock %}
+{% block show_nav %}false{% endblock %}
+
 {% block content %}
-<div class="dashboard">
-  <h2>Dashboard</h2>
+{% set role_label = 'HR' if role == 'HR' else ('IT Admin' if role == 'IT_ADMIN' else ('CISO' if role == 'CISO' else 'Management')) %}
+{% set ns = namespace(total=requests|length, pending_it=0, pending_approval=0, approved=0) %}
+{% for req in requests %}
+  {% if req.status == 'PENDING_IT' %}{% set ns.pending_it = ns.pending_it + 1 %}{% endif %}
+  {% if req.status == 'PENDING_APPROVAL' %}{% set ns.pending_approval = ns.pending_approval + 1 %}{% endif %}
+  {% if req.status == 'APPROVED' %}{% set ns.approved = ns.approved + 1 %}{% endif %}
+{% endfor %}
 
-  {% if role == 'HR' %}
-    <a class="btn" href="{{ url_for('hr_new_request') }}">New HR Request</a>
-  {% endif %}
-
-  {% if role in ['CISO', 'MANAGEMENT'] %}
-    <a class="btn" href="{{ url_for('approvals') }}">Pending Approvals</a>
-  {% endif %}
-
-  <div class="table">
-    <div class="table-header">
-      <span>Employee</span>
-      <span>Email</span>
-      <span>Status</span>
-      <span>Action</span>
+<section class="dash-shell">
+  <header class="dash-topbar">
+    <div class="dash-brand-wrap">
+      <a class="brand" href="{{ url_for('index') }}">
+        <span class="brand-icon"></span>
+        <span>Company IAM</span>
+      </a>
+      <p>{{ current_user.domain }}</p>
     </div>
-    {% for req in requests %}
-      <div class="table-row">
-        <span>{{ req.employee_name }}</span>
-        <span>{{ req.employee_email }}</span>
-        <span>{{ req.status }}</span>
-        <span>
-          {% if role == 'IT_ADMIN' and req.status == 'PENDING_IT' %}
-            <a class="btn small" href="{{ url_for('it_provision', request_id=req.id) }}">Provision</a>
-          {% else %}
-            <a class="btn small secondary" href="{{ url_for('request_status', request_id=req.id) }}">View</a>
-          {% endif %}
-        </span>
+
+    <nav class="dash-center-nav">
+      <a class="dash-tab dash-tab-active" href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a class="dash-tab" href="#requests-table">Status</a>
+    </nav>
+
+    <div class="dash-user">
+      <span class="dash-avatar">{{ (current_user.email.split('@')[0][:2] if current_user.email else 'U')|upper }}</span>
+      <div>
+        <p>{{ current_user.email.split('@')[0] }}</p>
+        <span>{{ role_label }}</span>
       </div>
-    {% else %}
-      <div class="table-row">
-        <span>No requests found.</span>
+    </div>
+  </header>
+
+  <div class="dash-body">
+    <div class="dash-head-row">
+      <div>
+        <h1>My Requests</h1>
+        <p>{{ current_user.domain }} - {{ role_label }} view</p>
       </div>
-    {% endfor %}
+      <div>
+        {% if role == 'HR' %}
+          <a class="dash-cta" href="{{ url_for('hr_new_request') }}">+ New employee request</a>
+        {% elif role == 'IT_ADMIN' %}
+          <a class="dash-cta" href="{{ url_for('dashboard') }}">IT queue</a>
+        {% else %}
+          <a class="dash-cta" href="{{ url_for('approvals') }}">Pending approvals</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="dash-metrics">
+      <article class="metric-card">
+        <h3>Total</h3>
+        <strong>{{ ns.total }}</strong>
+        <p class="metric-blue">All requests</p>
+      </article>
+      <article class="metric-card">
+        <h3>Pending IT</h3>
+        <strong>{{ ns.pending_it }}</strong>
+        <p class="metric-blue">Awaiting provisioning</p>
+      </article>
+      <article class="metric-card">
+        <h3>Pending Approval</h3>
+        <strong>{{ ns.pending_approval }}</strong>
+        <p class="metric-orange">Needs CISO + Mgmt</p>
+      </article>
+      <article class="metric-card">
+        <h3>Approved</h3>
+        <strong>{{ ns.approved }}</strong>
+        <p class="metric-green">Access granted</p>
+      </article>
+    </div>
+
+    <section class="dash-table" id="requests-table">
+      <div class="dash-table-head">
+        <span>Employee</span>
+        <span>Email</span>
+        <span>Submitted</span>
+        <span>Status</span>
+        <span>Action</span>
+      </div>
+
+      {% for req in requests %}
+        <div class="dash-table-row">
+          <span>{{ req.employee_name }}</span>
+          <span class="mono-mail">{{ req.employee_email }}</span>
+          <span>{{ req.created_at.strftime('%b %d, %Y') if req.created_at else '-' }}</span>
+          <span>
+            {% if req.status == 'PENDING_IT' %}
+              <span class="status-pill status-pending-it">Pending IT</span>
+            {% elif req.status == 'PENDING_APPROVAL' %}
+              <span class="status-pill status-pending-approval">Pending Approval</span>
+            {% elif req.status == 'APPROVED' %}
+              <span class="status-pill status-approved">Approved</span>
+            {% else %}
+              <span class="status-pill status-rejected">Rejected</span>
+            {% endif %}
+          </span>
+          <span>
+            {% if role == 'IT_ADMIN' and req.status == 'PENDING_IT' %}
+              <a class="row-action" href="{{ url_for('it_provision', request_id=req.id) }}">Provision</a>
+            {% else %}
+              <a class="row-action" href="{{ url_for('request_status', request_id=req.id) }}">View</a>
+            {% endif %}
+          </span>
+        </div>
+      {% else %}
+        <div class="dash-table-row">
+          <span>No requests found.</span>
+          <span>-</span>
+          <span>-</span>
+          <span>-</span>
+          <span>-</span>
+        </div>
+      {% endfor %}
+    </section>
   </div>
-</div>
+</section>
 {% endblock %}

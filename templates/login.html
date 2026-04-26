@@ -1,14 +1,55 @@
 {% extends "base.html" %}
 
+{% block page_class %}auth-page{% endblock %}
+{% block show_nav %}false{% endblock %}
+
 {% block content %}
-<div class="card">
-  <h2>Login</h2>
-  <form method="post">
-    <label>Email</label>
-    <input type="email" name="email" required>
-    <label>Password</label>
-    <input type="password" name="password" required>
-    <button type="submit" class="btn">Login</button>
-  </form>
-</div>
+<section class="auth-shell">
+  <aside class="auth-left">
+    <div class="auth-brand">
+      <span class="brand-icon"></span>
+      <span>Company IAM</span>
+    </div>
+    <h1>Access starts here. Security never stops.</h1>
+    <p>Role-based, domain-scoped identity management for your entire organization.</p>
+
+    <ul class="auth-points">
+      <li>4-role workflow: HR - IT - CISO + Management</li>
+      <li>M365 license and security group provisioning</li>
+      <li>Domain-scoped tenant isolation</li>
+      <li>Full audit trail on every request</li>
+    </ul>
+  </aside>
+
+  <div class="auth-right">
+    <h2>Welcome back</h2>
+    <p class="auth-subtitle">Sign in with your work email</p>
+
+    <form method="post" class="auth-form">
+      <label>Work Email</label>
+      <input type="email" name="email" value="" required>
+
+      <label>Password</label>
+      <input type="password" name="password" required>
+
+      <div class="auth-help-row">
+        <span></span>
+        <a href="{{ url_for('login') }}">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="auth-submit">Sign in</button>
+
+      <p class="auth-divider">or sign in as</p>
+
+      <div class="role-quick-list" aria-hidden="true">
+        <button type="button" class="quick-role">HR</button>
+        <button type="button" class="quick-role">IT Admin</button>
+        <button type="button" class="quick-role">CISO</button>
+        <button type="button" class="quick-role">Management</button>
+      </div>
+    </form>
+
+    <p class="auth-switch">Don't have an account? <a href="{{ url_for('signup') }}">Sign up</a></p>
+  </div>
+</section>
 {% endblock %}
