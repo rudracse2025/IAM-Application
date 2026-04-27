@@ -17,13 +17,14 @@
     <div class="dash-brand-wrap">
       <a class="brand" href="{{ url_for('index') }}">
         <span class="brand-icon"></span>
-        <span>Company IAM</span>
+        <span>onboarding.io</span>
       </a>
       <p>{{ current_user.domain }}</p>
     </div>
 
     <nav class="dash-center-nav">
       <a class="dash-tab dash-tab-active" href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a class="dash-tab" href="{{ url_for('history') }}">History</a>
       <a class="dash-tab" href="#requests-table">Status</a>
     </nav>
 
@@ -76,6 +77,16 @@
       </article>
     </div>
 
+    <section class="widget-strip" aria-label="Role metrics">
+      {% for widget in dashboard_widgets %}
+        <article class="metric-card widget-card">
+          <h3>{{ widget.label }}</h3>
+          <strong>{{ widget.value }}</strong>
+          <p class="{{ widget.tone }}">{{ widget.desc }}</p>
+        </article>
+      {% endfor %}
+    </section>
+
     <section class="dash-table" id="requests-table">
       <div class="dash-table-head">
         <span>Employee</span>
@@ -87,9 +98,18 @@
 
       {% for req in requests %}
         <div class="dash-table-row">
-          <span>{{ req.employee_name }}</span>
-          <span class="mono-mail">{{ req.employee_email }}</span>
-          <span>{{ req.created_at.strftime('%b %d, %Y') if req.created_at else '-' }}</span>
+          <span>
+            <strong>{{ req.employee_name }}</strong>
+            <span class="table-subtext">{{ req.job_title }}{% if req.gender %} · {{ req.gender }}{% endif %}</span>
+          </span>
+          <span>
+            <span class="mono-mail">{{ req.employee_email }}</span>
+            <span class="table-subtext">{{ req.company_email }}</span>
+          </span>
+          <span>
+            {{ req.created_at.strftime('%b %d, %Y') if req.created_at else '-' }}
+            <span class="table-subtext">{{ req.work_mode }} · {{ req.work_location }}</span>
+          </span>
           <span>
             {% if req.status == 'PENDING_IT' %}
               <span class="status-pill status-pending-it">Pending IT</span>
@@ -100,6 +120,12 @@
             {% else %}
               <span class="status-pill status-rejected">Rejected</span>
             {% endif %}
+            <span class="table-subtext">Pending from: {{ tracking_map.get(req.id, {}).get('pending_from', '-') }}</span>
+            <span class="workflow-tree">
+              {% for step in tracking_map.get(req.id, {}).get('steps', []) %}
+                <span class="tree-node tree-{{ step.state }}">{{ step.label }}</span>{% if not loop.last %}<span class="tree-arrow">-></span>{% endif %}
+              {% endfor %}
+            </span>
           </span>
           <span>
             {% if role == 'IT_ADMIN' and req.status == 'PENDING_IT' %}

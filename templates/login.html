@@ -8,7 +8,7 @@
   <aside class="auth-left">
     <div class="auth-brand">
       <span class="brand-icon"></span>
-      <span>Company IAM</span>
+      <span>onboarding.io</span>
     </div>
     <h1>Access starts here. Security never stops.</h1>
     <p>Role-based, domain-scoped identity management for your entire organization.</p>
@@ -30,7 +30,18 @@
       <input type="email" name="email" value="" required>
 
       <label>Password</label>
-      <input type="password" name="password" required>
+      <div class="password-wrap">
+        <input id="login-password" type="password" name="password" required>
+        <button
+          type="button"
+          class="password-toggle"
+          data-target="login-password"
+          aria-label="Show password"
+          aria-pressed="false"
+        >
+          <span class="eye-icon" aria-hidden="true"></span>
+        </button>
+      </div>
 
       <div class="auth-help-row">
         <span></span>

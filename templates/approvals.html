@@ -6,17 +6,30 @@
   <div class="table">
     <div class="table-header">
       <span>Employee</span>
-      <span>Email</span>
+      <span>Workflow Tracker</span>
       <span>Status</span>
       <span>Decision</span>
     </div>
     {% for req in requests %}
       <div class="table-row">
-        <span>{{ req.employee_name }}</span>
-        <span>{{ req.employee_email }}</span>
+        <span>
+          {{ req.employee_name }}
+          <span class="table-subtext">{{ req.job_title }} · {{ req.work_mode }}</span>
+        </span>
+        <span>
+          <span class="table-subtext">Pending from: {{ tracking_map[req.id].pending_from }}</span>
+          <span class="workflow-tree">
+            {% for step in tracking_map[req.id].steps %}
+              <span class="tree-node tree-{{ step.state }}">{{ step.label }}</span>{% if not loop.last %}<span class="tree-arrow">-></span>{% endif %}
+            {% endfor %}
+          </span>
+          <span class="table-subtext">CISO remark: {{ tracking_map[req.id].remarks['CISO'] if tracking_map[req.id].remarks['CISO'] else '-' }}</span>
+          <span class="table-subtext">Management remark: {{ tracking_map[req.id].remarks['MANAGEMENT'] if tracking_map[req.id].remarks['MANAGEMENT'] else '-' }}</span>
+        </span>
         <span>{{ req.status }}</span>
         <span>
           <form method="post" action="{{ url_for('approve_request', request_id=req.id) }}" class="inline-form">
+            <textarea name="remarks" rows="2" placeholder="Add remarks for this decision">{{ my_remarks.get(req.id, '') }}</textarea>
             <button class="btn small" name="decision" value="APPROVED">Approve</button>
             <button class="btn small secondary" name="decision" value="REJECTED">Reject</button>
           </form>

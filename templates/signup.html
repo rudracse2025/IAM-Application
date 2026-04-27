@@ -8,7 +8,7 @@
   <aside class="auth-left">
     <div class="auth-brand">
       <span class="brand-icon"></span>
-      <span>Company IAM</span>
+      <span>onboarding.io</span>
     </div>
     <h1>Join your team's IAM workspace</h1>
     <p>Select your role. Your access level and workflows are automatically configured based on what you choose.</p>
@@ -30,7 +30,18 @@
       <input type="email" name="email" placeholder="you@company.com" required>
 
       <label>Password</label>
-      <input type="password" name="password" placeholder="Min. 8 characters" required>
+      <div class="password-wrap">
+        <input id="signup-password" type="password" name="password" placeholder="Min. 8 characters" required>
+        <button
+          type="button"
+          class="password-toggle"
+          data-target="signup-password"
+          aria-label="Show password"
+          aria-pressed="false"
+        >
+          <span class="eye-icon" aria-hidden="true"></span>
+        </button>
+      </div>
 
       <div class="double-field-row">
         <div>

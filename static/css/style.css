@@ -119,6 +119,133 @@ main {
   padding: 0;
 }
 
+.page-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.95rem 1rem 0;
+  flex-wrap: wrap;
+}
+
+.page-control-btn {
+  text-align: center;
+}
+
+.page-control-icon-btn {
+  min-width: 3rem;
+  padding-inline: 0.9rem;
+}
+
+.page-control-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.page-control-home .page-control-symbol {
+  font-size: 1.05rem;
+}
+
+.form-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.form-grid.two-col {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-grid .full-width {
+  grid-column: 1 / -1;
+}
+
+.field-hint {
+  margin: 0.35rem 0 0;
+  color: #5b6475;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.preview-box {
+  display: flex;
+  align-items: center;
+  min-height: 2.6rem;
+  padding: 0.68rem 0.8rem;
+  border-radius: 0.5rem;
+  border: 1px dashed #a9c0ec;
+  background: #eef4ff;
+  color: #163a7a;
+  font-weight: 800;
+}
+
+.checkbox-group {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.checkbox-field input {
+  width: auto;
+  margin-top: 0.18rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.detail-item {
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  background: #ffffff;
+  padding: 0.78rem 0.86rem;
+}
+
+.detail-item span {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: #6b7280;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.detail-item strong {
+  color: #0f172a;
+  font-size: 0.96rem;
+}
+
+.table-subtext {
+  display: block;
+  margin-top: 0.14rem;
+  color: #6b7280;
+  font-size: 0.82rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .hero-panel {
   background: var(--hero-top);
   color: var(--hero-ink);
@@ -200,6 +327,25 @@ main {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
+}
+
+.contact-developer {
+  margin: 0 1rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  background: #f4f7fc;
+  padding: 1rem;
+}
+
+.contact-developer h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.contact-developer p {
+  margin: 0.45rem 0 0.95rem;
+  color: #334155;
+  line-height: 1.5;
 }
 
 .feature-card {
@@ -411,8 +557,18 @@ select {
   font: inherit;
 }
 
+textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 0.58rem 0.65rem;
+  font: inherit;
+  resize: vertical;
+}
+
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
   outline: 2px solid #bfd4f9;
   border-color: #93b4f1;
 }
@@ -447,8 +603,132 @@ select:focus {
 }
 
 .inline-form {
-  display: inline-flex;
+  display: grid;
   gap: 0.35rem;
+}
+
+.tracking-card {
+  margin-bottom: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  background: #ffffff;
+  padding: 0.75rem 0.85rem;
+}
+
+.tracking-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.workflow-tree {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.tree-node {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border: 1px solid #cdd4df;
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.tree-node.tree-done {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.tree-node.tree-pending {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e3a8a;
+}
+
+.tree-node.tree-rejected {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+
+.tree-arrow {
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.history-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.history-filters {
+  margin-top: 0.75rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: end;
+}
+
+.history-filter-actions {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.history-filter-actions .btn {
+  width: auto;
+}
+
+.history-header,
+.history-row {
+  grid-template-columns: 1fr 1.4fr 1fr 1fr 1fr 1.2fr;
+}
+
+.widget-strip {
+  margin-top: 0.95rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.widget-card {
+  margin: 0;
+}
+
+.audit-timeline {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.audit-item {
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  background: #ffffff;
+  padding: 0.72rem 0.82rem;
+}
+
+.audit-item p {
+  margin: 0.35rem 0;
+  color: #1e293b;
+}
+
+.audit-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.audit-meta span {
+  font-size: 0.82rem;
+  color: #64748b;
 }
 
 .auth-page {
@@ -579,6 +859,62 @@ select:focus {
   height: 44px;
   padding: 0 0.78rem;
   font-size: 1.03rem;
+}
+
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input {
+  padding-right: 2.75rem;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.6rem;
+  transform: translateY(-50%);
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 0;
+  padding: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid #8fb3e9;
+  outline-offset: 2px;
+}
+
+.eye-icon {
+  position: relative;
+  display: inline-block;
+  width: 1.02rem;
+  height: 0.62rem;
+  border: 2px solid #64748b;
+  border-radius: 0.62rem / 0.38rem;
+}
+
+.eye-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.28rem;
+  height: 0.28rem;
+  transform: translate(-50%, -50%);
+  background: #64748b;
+  border-radius: 999px;
+}
+
+.password-toggle.is-visible .eye-icon {
+  border-color: #1d4ed8;
+}
+
+.password-toggle.is-visible .eye-icon::after {
+  background: #1d4ed8;
 }
 
 .auth-form input::placeholder {
@@ -1025,8 +1361,21 @@ select:focus {
     grid-template-columns: 1fr 1fr;
   }
 
+  .widget-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .history-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .dash-table-head,
   .dash-table-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid.two-col,
+  .detail-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -1035,6 +1384,14 @@ select:focus {
   .page-shell {
     width: calc(100% - 1rem);
     margin: 0.5rem auto;
+  }
+
+  .page-controls {
+    padding: 0.8rem 0.8rem 0;
+  }
+
+  .page-control-btn {
+    width: 100%;
   }
 
   .top-nav {
@@ -1056,6 +1413,18 @@ select:focus {
 
   .btn {
     width: 100%;
+  }
+
+  .history-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .history-filter-actions {
+    flex-direction: column;
+  }
+
+  .widget-strip {
+    grid-template-columns: 1fr;
   }
 
   .hero-actions {

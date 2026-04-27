@@ -3,12 +3,78 @@
 {% block content %}
 <div class="card">
   <h2>New Employee Request</h2>
-  <form method="post">
-    <label>Employee Name</label>
-    <input type="text" name="employee_name" required>
-    <label>Employee Email</label>
-    <input type="email" name="employee_email" required>
-    <button type="submit" class="btn">Submit Request</button>
+  <p class="field-hint">HR enters the new hire's personal email and job details. The company email is generated automatically as firstname.lastname@{{ company_domain }}.</p>
+  <form method="post" class="form-grid two-col">
+    <div>
+      <label>First Name</label>
+      <input id="first_name" type="text" name="first_name" required>
+    </div>
+    <div>
+      <label>Middle Name</label>
+      <input id="middle_name" type="text" name="middle_name">
+    </div>
+    <div>
+      <label>Last Name</label>
+      <input id="last_name" type="text" name="last_name" required>
+    </div>
+    <div>
+      <label>Personal Email / New Hire ID</label>
+      <input id="employee_email" type="email" name="employee_email" required>
+    </div>
+    <div>
+      <label>Gender</label>
+      <select name="gender" required>
+        <option value="">Select gender</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+        <option>Prefer not to say</option>
+      </select>
+    </div>
+    <div>
+      <label>Job Role</label>
+      <input type="text" name="job_title" placeholder="e.g. HR Executive" required>
+    </div>
+    <div>
+      <label>Work Mode</label>
+      <select name="work_mode" required>
+        <option value="">Select work mode</option>
+        <option>Onsite</option>
+        <option>Hybrid</option>
+        <option>Remote</option>
+      </select>
+    </div>
+    <div>
+      <label>Work Location</label>
+      <input type="text" name="work_location" placeholder="e.g. Chennai, India" required>
+    </div>
+    <div class="full-width">
+      <label>Generated Company Email</label>
+      <div class="preview-box" id="company-email-preview">firstname.lastname@{{ company_domain }}</div>
+      <p class="field-hint">The company email is locked to the naming policy and will be sent to IT as part of the request.</p>
+    </div>
+    <div class="full-width">
+      <button type="submit" class="btn">Submit Request</button>
+    </div>
   </form>
 </div>
+<script>
+  (() => {
+    const firstName = document.getElementById('first_name');
+    const lastName = document.getElementById('last_name');
+    const preview = document.getElementById('company-email-preview');
+    const domain = '{{ company_domain }}';
+
+    const buildPreview = () => {
+      const cleanPart = (value) => value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '');
+      const first = cleanPart(firstName.value || 'firstname');
+      const last = cleanPart(lastName.value || 'lastname');
+      preview.textContent = `${first || 'firstname'}.${last || 'lastname'}@${domain}`;
+    };
+
+    firstName.addEventListener('input', buildPreview);
+    lastName.addEventListener('input', buildPreview);
+    buildPreview();
+  })();
+</script>
 {% endblock %}

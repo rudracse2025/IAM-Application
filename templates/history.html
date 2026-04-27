@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+  <div class="history-head">
+    <h2>{{ history_title }}</h2>
+    <a class="btn small" href="{{ url_for('history', export='csv', start_date=filters.start_date_raw, end_date=filters.end_date_raw, status=filters.status, employee=filters.employee_raw) }}">Download CSV</a>
+  </div>
+
+  <form method="get" class="history-filters">
+    <div>
+      <label>Start Date</label>
+      <input type="date" name="start_date" value="{{ filters.start_date_raw }}">
+    </div>
+    <div>
+      <label>End Date</label>
+      <input type="date" name="end_date" value="{{ filters.end_date_raw }}">
+    </div>
+    <div>
+      <label>Status</label>
+      <select name="status">
+        <option value="">All</option>
+        {% for status in status_options %}
+          <option value="{{ status }}" {% if filters.status == status %}selected{% endif %}>{{ status }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label>Employee</label>
+      <input type="text" name="employee" placeholder="Name or email" value="{{ filters.employee_raw }}">
+    </div>
+    <div class="history-filter-actions">
+      <button type="submit" class="btn small">Apply Filters</button>
+      <a class="btn btn-outline small" href="{{ url_for('history') }}">Clear</a>
+    </div>
+  </form>
+
+  <div class="table">
+    <div class="table-header history-header">
+      <span>Date</span>
+      <span>Employee</span>
+      <span>Activity</span>
+      <span>Status</span>
+      <span>Pending From</span>
+      <span>Remarks</span>
+    </div>
+    {% for row in history_rows %}
+      <div class="table-row history-row">
+        <span>{{ row.date }}</span>
+        <span>
+          {{ row.employee }}
+          <span class="table-subtext">{{ row.personal_email }}</span>
+          <span class="table-subtext">{{ row.company_email }}</span>
+        </span>
+        <span>{{ row.activity }}</span>
+        <span>{{ row.status }}</span>
+        <span>{{ row.pending_from }}</span>
+        <span>{{ row.remarks }}</span>
+      </div>
+    {% else %}
+      <div class="table-row history-row">
+        <span>No activity found.</span>
+        <span>-</span>
+        <span>-</span>
+        <span>-</span>
+        <span>-</span>
+        <span>-</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

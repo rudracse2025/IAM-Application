@@ -3,19 +3,85 @@
 {% block content %}
 <div class="card">
   <h2>Provision User ID</h2>
-  <p><strong>{{ request_item.employee_name }}</strong> ({{ request_item.employee_email }})</p>
-  <form method="post">
-    <label>IT User ID</label>
-    <input type="text" name="it_user_id" required>
-    <label>Microsoft License</label>
-    <select name="license_type" required>
-      <option value="M365 Business Premium">M365 Business Premium</option>
-      <option value="M365 E3">M365 E3</option>
-      <option value="M365 E5">M365 E5</option>
-    </select>
-    <label>Security Groups (comma separated)</label>
-    <input type="text" name="security_groups">
-    <button type="submit" class="btn">Send for Approval</button>
+  <div class="detail-grid">
+    <div class="detail-item">
+      <span>New Hire</span>
+      <strong>{{ request_item.employee_name }}</strong>
+    </div>
+    <div class="detail-item">
+      <span>Personal Email</span>
+      <strong>{{ request_item.employee_email }}</strong>
+    </div>
+    <div class="detail-item">
+      <span>Company Email</span>
+      <strong>{{ request_item.company_email }}</strong>
+    </div>
+    <div class="detail-item">
+      <span>Role</span>
+      <strong>{{ request_item.job_title }}</strong>
+    </div>
+    <div class="detail-item">
+      <span>Work Mode</span>
+      <strong>{{ request_item.work_mode }}</strong>
+    </div>
+    <div class="detail-item">
+      <span>Work Location</span>
+      <strong>{{ request_item.work_location }}</strong>
+    </div>
+  </div>
+
+  <form method="post" class="form-grid two-col" style="margin-top: 1rem;">
+    <div>
+      <label>IT User ID</label>
+      <input type="text" name="it_user_id" required>
+    </div>
+    <div>
+      <label>Microsoft License</label>
+      <select name="license_type">
+        <option value="">Select license</option>
+        {% for license in license_options %}
+          <option value="{{ license }}">{{ license }}</option>
+        {% endfor %}
+      </select>
+      <p class="field-hint">Required when you assign a Microsoft license.</p>
+    </div>
+    <div class="full-width">
+      <label>Security Groups (comma separated)</label>
+      <input type="text" name="security_groups" placeholder="e.g. Finance, Teams, SharePoint">
+    </div>
+    <div class="full-width">
+      <label>IT Actions</label>
+      <div class="checkbox-group">
+        <label class="checkbox-field">
+          <input type="checkbox" name="assign_license" checked>
+          <span>Assign Microsoft 365 license</span>
+        </label>
+        <label class="checkbox-field">
+          <input type="checkbox" name="password_reset_required">
+          <span>Force password reset on first login</span>
+        </label>
+        <label class="checkbox-field">
+          <input type="checkbox" name="mfa_reset_required">
+          <span>Require MFA reset / re-registration</span>
+        </label>
+        <label class="checkbox-field">
+          <input type="checkbox" name="mailbox_creation_required">
+          <span>Create mailbox and assign Exchange services</span>
+        </label>
+      </div>
+    </div>
+    <div class="full-width">
+      <label>Account Access Action</label>
+      <select name="account_access_action">
+        <option value="NONE">No account state change</option>
+        <option value="ENABLE">Enable account for sign-in</option>
+        <option value="DISABLE">Disable account / block sign-in</option>
+      </select>
+      <p class="field-hint">Use this control when IT needs to explicitly enable or block the account.</p>
+    </div>
+    <div class="full-width">
+      <button type="submit" class="btn">Send for Approval</button>
+    </div>
   </form>
 </div>
 {% endblock %}

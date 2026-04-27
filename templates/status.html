@@ -3,8 +3,121 @@
 {% block content %}
 <div class="card">
   <h2>Request Status</h2>
-  <p><strong>Employee:</strong> {{ request_item.employee_name }}</p>
-  <p><strong>Email:</strong> {{ request_item.employee_email }}</p>
-  <p><strong>Status:</strong> {{ request_item.status }}</p>
+  {% if tracking %}
+    <div class="tracking-card">
+      <h3>Workflow Tracker</h3>
+      <p class="table-subtext">Pending from: {{ tracking.pending_from }}</p>
+      <div class="workflow-tree">
+        {% for step in tracking.steps %}
+          <span class="tree-node tree-{{ step.state }}">{{ step.label }}</span>{% if not loop.last %}<span class="tree-arrow">-></span>{% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="detail-grid">
+    <div class="detail-item">
+      <span>Employee</span>
+      <strong>{{ request_item.employee_name }}</strong>
+    </div>
+    <div class="detail-item">
+      <span>Personal Email</span>
+      <strong>{{ request_item.employee_email }}</strong>
+    </div>
+    <div class="detail-item">
+      <span>Company Email</span>
+      <strong>{{ request_item.company_email }}</strong>
+    </div>
+    <div class="detail-item">
+      <span>Job Role</span>
+      <strong>{{ request_item.job_title }}</strong>
+    </div>
+    <div class="detail-item">
+      <span>Work Mode</span>
+      <strong>{{ request_item.work_mode }}</strong>
+    </div>
+    <div class="detail-item">
+      <span>Work Location</span>
+      <strong>{{ request_item.work_location }}</strong>
+    </div>
+    <div class="detail-item">
+      <span>Status</span>
+      <strong>{{ request_item.status }}</strong>
+    </div>
+    <div class="detail-item">
+      <span>Gender</span>
+      <strong>{{ request_item.gender }}</strong>
+    </div>
+  </div>
+
+  {% if provisioning %}
+    <h3 style="margin-top: 1rem; margin-bottom: 0.75rem;">IT Provisioning Summary</h3>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <span>IT User ID</span>
+        <strong>{{ provisioning.it_user_id }}</strong>
+      </div>
+      <div class="detail-item">
+        <span>Microsoft License</span>
+        <strong>{{ provisioning.license_type or 'Not assigned' }}</strong>
+      </div>
+      <div class="detail-item">
+        <span>Password Reset</span>
+        <strong>{{ 'Required' if provisioning.password_reset_required else 'Not required' }}</strong>
+      </div>
+      <div class="detail-item">
+        <span>MFA Reset</span>
+        <strong>{{ 'Required' if provisioning.mfa_reset_required else 'Not required' }}</strong>
+      </div>
+      <div class="detail-item">
+        <span>Mailbox Creation</span>
+        <strong>{{ 'Required' if provisioning.mailbox_creation_required else 'Not required' }}</strong>
+      </div>
+      <div class="detail-item">
+        <span>User Blocked</span>
+        <strong>{{ 'Yes' if provisioning.block_user else 'No' }}</strong>
+      </div>
+      <div class="detail-item">
+        <span>Account Access</span>
+        <strong>
+          {% if provisioning.account_access_action == 'ENABLE' %}
+            Enabled
+          {% elif provisioning.account_access_action == 'DISABLE' %}
+            Disabled
+          {% else %}
+            No change
+          {% endif %}
+        </strong>
+      </div>
+      <div class="detail-item">
+        <span>Security Groups</span>
+        <strong>{{ provisioning.security_groups or '-' }}</strong>
+      </div>
+      <div class="detail-item">
+        <span>Assign License</span>
+        <strong>{{ 'Yes' if provisioning.assign_license else 'No' }}</strong>
+      </div>
+    </div>
+  {% endif %}
+
+  <h3 style="margin-top: 1rem; margin-bottom: 0.75rem;">Request Timeline</h3>
+  <div class="audit-timeline">
+    {% for audit in audits %}
+      <article class="audit-item">
+        <div class="audit-meta">
+          <strong>{{ audit.event_type.replace('_', ' ') }}</strong>
+          <span>{{ audit.created_at.strftime('%Y-%m-%d %H:%M') if audit.created_at else '-' }}</span>
+        </div>
+        <p>{{ audit.details or '-' }}</p>
+        <span class="table-subtext">Actor: {{ audit.actor_email or 'System' }}{% if audit.actor_role %} ({{ audit.actor_role }}){% endif %}</span>
+      </article>
+    {% else %}
+      <article class="audit-item">
+        <div class="audit-meta">
+          <strong>No timeline entries yet</strong>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

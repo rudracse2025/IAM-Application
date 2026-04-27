@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block show_page_controls %}false{% endblock %}
+
 {% block content %}
 <section class="hero-panel">
   <p class="hero-kicker">Enterprise Identity Platform</p>
@@ -39,5 +41,16 @@
     <p>Domain-scoped data ensures each company sees only its own users, requests, and provisioning activity.</p>
     <span class="role-badge role-all">All Roles</span>
   </article>
+</section>
+
+<section class="contact-developer" aria-labelledby="developer-contact-title">
+  <h2 id="developer-contact-title">Need Help? Contact the Developer</h2>
+  <p>If you have questions, feature requests, or run into issues, you can directly draft an email.</p>
+  <a
+    class="btn"
+    href="mailto:developer@companyiam.com?subject=IAM%20Portal%20Support%20Request&body=Hi%20Developer%2C%0A%0AI%20need%20help%20with%20the%20IAM%20Portal.%0A%0APage%3A%0AIssue%20details%3A%0A%0AThanks."
+  >
+    Write a mail to developer
+  </a>
 </section>
 {% endblock %}

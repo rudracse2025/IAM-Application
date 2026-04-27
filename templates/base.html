@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Company IAM</title>
+  <title>onboarding.io</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,18 +11,20 @@
 </head>
 {% set page_class %}{% block page_class %}{% endblock %}{% endset %}
 {% set show_nav %}{% block show_nav %}true{% endblock %}{% endset %}
+{% set show_page_controls %}{% block show_page_controls %}true{% endblock %}{% endset %}
 <body class="{{ page_class|trim }}">
   <div class="page-shell {% if page_class|trim %}{{ page_class|trim }}{% endif %}">
     {% if show_nav|trim != 'false' %}
     <nav class="top-nav">
       <a class="brand" href="{{ url_for('index') }}">
         <span class="brand-icon"></span>
-        <span>Company IAM</span>
+        <span>onboarding.io</span>
       </a>
       <div class="nav-links">
         {% if current_user.is_authenticated %}
           <span class="nav-meta">{{ current_user.email }} ({{ current_user.role }})</span>
           <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+          <a class="nav-link" href="{{ url_for('history') }}">History</a>
           <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
         {% else %}
           <a class="nav-link nav-link-primary" href="{{ url_for('login') }}">Login</a>
@@ -43,8 +45,49 @@
       {% endif %}
     {% endwith %}
 
+    {% if show_page_controls|trim != 'false' %}
+      <div class="page-controls" role="navigation" aria-label="Page controls">
+        <button
+          type="button"
+          class="btn btn-outline page-control-btn page-control-icon-btn"
+          onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href='{{ url_for('index') }}'; }"
+          aria-label="Go back"
+          title="Go back"
+        >
+          <span class="page-control-symbol" aria-hidden="true">←</span>
+          <span class="sr-only">Back</span>
+        </button>
+        <a class="btn btn-outline page-control-btn page-control-icon-btn page-control-home" href="{{ url_for('index') }}" aria-label="Home" title="Home">
+          <span class="page-control-symbol" aria-hidden="true">⌂</span>
+          <span class="sr-only">Home</span>
+        </a>
+        <a class="btn btn-outline page-control-btn page-control-icon-btn" href="{{ url_for('logout') if current_user.is_authenticated else url_for('index') }}" aria-label="Next" title="Next">
+          <span class="page-control-symbol" aria-hidden="true">→</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+    {% endif %}
+
     {% block content %}{% endblock %}
     </main>
   </div>
+  <script>
+    document.querySelectorAll('.password-toggle').forEach((toggle) => {
+      const targetId = toggle.getAttribute('data-target');
+      const passwordInput = targetId ? document.getElementById(targetId) : null;
+
+      if (!passwordInput) {
+        return;
+      }
+
+      toggle.addEventListener('click', () => {
+        const shouldShow = passwordInput.type === 'password';
+        passwordInput.type = shouldShow ? 'text' : 'password';
+        toggle.classList.toggle('is-visible', shouldShow);
+        toggle.setAttribute('aria-pressed', String(shouldShow));
+        toggle.setAttribute('aria-label', shouldShow ? 'Hide password' : 'Show password');
+      });
+    });
+  </script>
 </body>
 </html>
