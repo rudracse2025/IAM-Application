@@ -1,111 +1,129 @@
 # IAM Application
 
-## Comprehensive Installation Guide
+A Flask-based Identity and Access Management (IAM) workflow app for employee onboarding and access provisioning.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/rudracse2025/IAM-Application.git
-   cd IAM-Application
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Create a `.env` file in the root directory and add the necessary environment variables.
+The system routes requests through HR, IT Admin, and business/security approvers with role-based access rules and status tracking.
 
-## Quick Start
+## Features
 
-1. Run the application:
-   ```bash
-   npm start
-   ```
-2. Open your browser and go to `http://localhost:3000`.
+- Role-based authentication for `HR`, `IT_ADMIN`, `CISO`, and `MANAGEMENT`
+- Secure password hashing using Werkzeug
+- Domain-based request isolation for multi-organization usage
+- HR request creation for new employee onboarding
+- IT provisioning stage with user ID, license, and security group assignment
+- Dual-approval process (CISO + Management)
+- Automatic final decision logic:
+  - request becomes `APPROVED` when both CISO and Management approve
+  - request becomes `REJECTED` if either approver rejects
+- Per-role dashboard filtering (each role sees relevant work items)
+- Individual request status view
+- Flash-message feedback for user actions
 
-## Detailed Features
+## Tech Stack
 
-- User authentication and authorization
-- Role-based access control
-- Activity logging and monitoring
-- API integration
+- Backend: Python, Flask
+- ORM: Flask-SQLAlchemy / SQLAlchemy
+- Authentication: Flask-Login
+- Password Security: Werkzeug
+- Database Drivers: PyMySQL (for MySQL), SQLite (optional for local/dev)
+- Templates/UI: Jinja2, HTML, CSS
+- Env Management: python-dotenv
+- Production Server Option: Gunicorn
 
-## Technologies Used
+## User Roles and Flow
 
-- Node.js
-- Express
-- MongoDB
-- React
-- Redux
-- JWT (JSON Web Tokens)
+1. HR submits a new employee access request (`PENDING_IT`)
+2. IT Admin provisions the account/resources (`PENDING_APPROVAL`)
+3. CISO and Management review and approve/reject
+4. Final state becomes `APPROVED` or `REJECTED`
 
-## Workflow Diagrams
+## Data Model
 
-- ![Workflow Diagram](path/to/workflow_diagram.png)
+The application includes these core models:
 
-## Complete API Documentation
+- `User`: login identity, role, domain
+- `EmployeeRequest`: onboarding request and current status
+- `Provisioning`: IT provisioning details linked to a request
+- `Approval`: approver decision records per request
 
-- **Users API:** `/api/users`
-  - `GET /` - Retrieve all users
-  - `POST /` - Create a new user
-- **Auth API:** `/api/auth`
-  - `POST /login` - Log in a user
-  - `POST /logout` - Log out a user
+## Routes (Key Endpoints)
 
-## Configuration Instructions
-
-- Set up your database connection in the `.env` file:
-  ```bash
-  DB_HOST=your_database_host
-  DB_USER=your_database_user
-  DB_PASS=your_database_password
-  ```
-
-## Security Best Practices
-
-- Use HTTPS for all API requests.
-- Regularly update dependencies.
-- Implement input validation to prevent SQL injection and XSS.
-
-## How to Use Guide for Each Role
-
-- **Admin:** Has full access to manage users and settings.
-- **User:** Can access their profile and perform tasks based on assigned roles.
-
-## Detailed Use Case Scenarios
-
-1. **Admin manages users:** Admin can create, update, or delete users.
-2. **User logs in:** User enters credentials and accesses their dashboard.
+| Route | Method(s) | Access | Purpose |
+|---|---|---|---|
+| `/` | GET | Public | Landing page |
+| `/signup` | GET, POST | Public | Register user |
+| `/login` | GET, POST | Public | Authenticate user |
+| `/logout` | GET | Logged-in users | Logout |
+| `/dashboard` | GET | Logged-in users | Role-specific dashboard |
+| `/hr/requests/new` | GET, POST | HR | Create employee request |
+| `/it/provision/<request_id>` | GET, POST | IT Admin | Submit provisioning details |
+| `/approvals` | GET | CISO, Management | View pending approvals |
+| `/approvals/<request_id>/approve` | POST | CISO, Management | Save decision |
+| `/status/<request_id>` | GET | Logged-in users | View request status |
 
 ## Project Structure
 
-```
+```text
 IAM-Application/
-├── client/             # React frontend
-├── server/             # Node.js backend
-└── docs/               # Documentation
+├── app.py
+├── models.py
+├── requirements.txt
+├── templates/
+├── static/
+└── instance/
 ```
 
-## Limitations
+## Setup and Run
 
-- Currently supports only MongoDB as the database.
-- No support for multi-language.
+### 1. Install dependencies
 
-## Troubleshooting
+```bash
+pip install -r requirements.txt
+```
 
-- If you encounter a blank page, ensure the server is running.
-- Check console for errors related to environment variables.
+### 2. Configure environment
 
-## Contributing Guidelines
+Create a `.env` file in the project root:
 
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-xyz`).
-3. Make your changes and commit them.
-4. Push to the branch (`git push origin feature-xyz`).
-5. Create a Pull Request.
+```env
+SECRET_KEY=change-this-secret
+DATABASE_URL=mysql+pymysql://iam_user:iam_pass@localhost:3306/iam_app
+```
 
-## Support Information
+Notes:
+- If `DATABASE_URL` is not set, the app defaults to MySQL at `mysql+pymysql://iam_user:iam_pass@localhost:3306/iam_app`
+- For quick local development without MySQL, you can run with SQLite:
 
-For any issues, please visit the [issues page](https://github.com/rudracse2025/IAM-Application/issues) or contact us at support@iamapp.com.
+```bash
+DATABASE_URL=sqlite:///iam_app.db python3 app.py
+```
 
----
+### 3. Start the app
 
-*Updated on 2026-04-26 18:43:14*
+```bash
+python3 app.py
+```
+
+The app runs at `http://127.0.0.1:5000` in development mode.
+
+## Security and Access Control
+
+- Passwords are stored as hashes, not plaintext
+- Route-level role checks enforce least-privilege access
+- Requests are filtered by user domain for tenant separation
+- Unauthorized role access returns `403`
+
+## Current Limitations
+
+- No audit trail/event log
+- No email notifications for workflow transitions
+- No bulk request operations
+- No REST API layer (HTML form workflow only)
+
+## Future Enhancements
+
+- Add audit logging for compliance and traceability
+- Add email or chat notifications on status changes
+- Add administrative reporting and analytics
+- Integrate with AD/LDAP/SSO providers
+- Add automated tests and CI pipeline
