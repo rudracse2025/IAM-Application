@@ -56,33 +56,12 @@ a {
 }
 
 .brand-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 0.4rem;
-  background: rgba(255, 255, 255, 0.18);
-  position: relative;
-}
-
-.brand-icon::before {
-  content: "";
-  width: 0.42rem;
-  height: 0.42rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  position: absolute;
-  top: 0.3rem;
-  left: 0.54rem;
-}
-
-.brand-icon::after {
-  content: "";
-  width: 0.8rem;
-  height: 0.48rem;
-  border-radius: 0.45rem 0.45rem 0.35rem 0.35rem;
-  background: rgba(255, 255, 255, 0.92);
-  position: absolute;
-  top: 0.84rem;
-  left: 0.35rem;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 0.45rem;
+  background: #ffffff url("/static/images/avatar-favicon.svg") center / cover no-repeat;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  flex-shrink: 0;
 }
 
 .nav-links {

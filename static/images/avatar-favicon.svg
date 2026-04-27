@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Avatar icon">
+  <defs>
+    <clipPath id="faceClip">
+      <circle cx="64" cy="52" r="28" />
+    </clipPath>
+  </defs>
+
+  <rect width="128" height="128" fill="#ffffff" />
+
+  <path d="M24 116c0-24 18-40 40-40s40 16 40 40" fill="#6cc7a1" />
+  <rect x="50" y="72" width="28" height="12" rx="6" fill="#d2a078" />
+  <circle cx="64" cy="52" r="28" fill="#e4b58f" />
+
+  <g clip-path="url(#faceClip)">
+    <path d="M28 55c0-22 15-33 36-33s36 11 36 33v-8c0-22-15-37-36-37S28 25 28 47z" fill="#5b2e13" />
+    <circle cx="38" cy="36" r="9" fill="#5b2e13" />
+    <circle cx="90" cy="36" r="9" fill="#5b2e13" />
+  </g>
+
+  <path d="M50 60c4 6 10 9 14 9s10-3 14-9" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none" />
+</svg>
