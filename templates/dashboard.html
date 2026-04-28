@@ -40,17 +40,13 @@
   <div class="dash-body">
     <div class="dash-head-row">
       <div>
-        <h1>My Requests</h1>
-        <p>{{ current_user.domain }} - {{ role_label }} view</p>
+        <p class="hero-kicker">{{ dashboard_hero.eyebrow }}</p>
+        <h1>{{ dashboard_hero.title }}</h1>
+        <p>{{ dashboard_hero.subtitle }}</p>
       </div>
-      <div>
-        {% if role == 'HR' %}
-          <a class="dash-cta" href="{{ url_for('hr_new_request') }}">+ New employee request</a>
-        {% elif role == 'IT_ADMIN' %}
-          <a class="dash-cta" href="{{ url_for('dashboard') }}">IT queue</a>
-        {% else %}
-          <a class="dash-cta" href="{{ url_for('approvals') }}">Pending approvals</a>
-        {% endif %}
+      <div class="dash-head-actions">
+        <a class="dash-cta" href="{{ dashboard_hero.primary_href }}">{{ dashboard_hero.primary_label }}</a>
+        <a class="dash-cta dash-cta-secondary" href="{{ dashboard_hero.secondary_href }}">{{ dashboard_hero.secondary_label }}</a>
       </div>
     </div>
 
@@ -87,63 +83,157 @@
       {% endfor %}
     </section>
 
-    <section class="dash-table" id="requests-table">
-      <div class="dash-table-head">
-        <span>Employee</span>
-        <span>Email</span>
-        <span>Submitted</span>
-        <span>Status</span>
-        <span>Action</span>
+    <section class="dash-layout">
+      <div class="dash-main-column">
+        <section class="dash-table" id="requests-table">
+          <div class="dash-table-head">
+            <span>Employee</span>
+            <span>Email</span>
+            <span>Submitted</span>
+            <span>Status</span>
+            <span>Action</span>
+          </div>
+
+          {% for req in requests %}
+            <div class="dash-table-row">
+              <span>
+                <strong>{{ req.employee_name }}</strong>
+                <span class="table-subtext">{{ req.job_title }}{% if req.gender %} · {{ req.gender }}{% endif %}</span>
+              </span>
+              <span>
+                <span class="mono-mail">{{ req.employee_email }}</span>
+                <span class="table-subtext">{{ req.company_email }}</span>
+              </span>
+              <span>
+                {{ req.created_at.strftime('%b %d, %Y') if req.created_at else '-' }}
+                <span class="table-subtext">{{ req.work_mode }} · {{ req.work_location }}</span>
+              </span>
+              <span>
+                {% if req.status == 'PENDING_IT' %}
+                  <span class="status-pill status-pending-it">Pending IT</span>
+                {% elif req.status == 'PENDING_APPROVAL' %}
+                  <span class="status-pill status-pending-approval">Pending Approval</span>
+                {% elif req.status == 'APPROVED' %}
+                  <span class="status-pill status-approved">Approved</span>
+                {% else %}
+                  <span class="status-pill status-rejected">Rejected</span>
+                {% endif %}
+                <span class="table-subtext">Pending from: {{ tracking_map.get(req.id, {}).get('pending_from', '-') }}</span>
+                <span class="workflow-tree">
+                  {% for step in tracking_map.get(req.id, {}).get('steps', []) %}
+                    <span class="tree-node tree-{{ step.state }}">{{ step.label }}</span>{% if not loop.last %}<span class="tree-arrow">-></span>{% endif %}
+                  {% endfor %}
+                </span>
+              </span>
+              <span>
+                {% if role == 'IT_ADMIN' and req.status == 'PENDING_IT' %}
+                  <a class="row-action" href="{{ url_for('it_provision', request_id=req.id) }}">Provision</a>
+                {% elif role in ['CISO', 'MANAGEMENT'] and req.status == 'PENDING_APPROVAL' %}
+                  <a class="row-action" href="{{ url_for('approvals') }}">Review</a>
+                {% else %}
+                  <a class="row-action" href="{{ url_for('request_status', request_id=req.id) }}">View</a>
+                {% endif %}
+              </span>
+            </div>
+          {% else %}
+            <div class="dash-table-row">
+              <span>No requests found.</span>
+              <span>-</span>
+              <span>-</span>
+              <span>-</span>
+              <span>-</span>
+            </div>
+          {% endfor %}
+        </section>
+
+        <section class="dash-table spotlight-table">
+          <div class="dash-table-head spotlight-head">
+            <span>Recent request spotlight</span>
+            <span>Stage</span>
+            <span>State</span>
+            <span>Link</span>
+          </div>
+
+          {% for req in spotlight_requests %}
+            <div class="dash-table-row spotlight-row">
+              <span>
+                <strong>{{ req.employee_name }}</strong>
+                <span class="table-subtext">{{ req.company_email }}</span>
+              </span>
+              <span>
+                <span class="table-subtext">{{ tracking_map.get(req.id, {}).get('pending_from', '-') }}</span>
+              </span>
+              <span>
+                {% if req.status == 'PENDING_IT' %}
+                  <span class="status-pill status-pending-it">Pending IT</span>
+                {% elif req.status == 'PENDING_APPROVAL' %}
+                  <span class="status-pill status-pending-approval">Pending Approval</span>
+                {% elif req.status == 'APPROVED' %}
+                  <span class="status-pill status-approved">Approved</span>
+                {% else %}
+                  <span class="status-pill status-rejected">Rejected</span>
+                {% endif %}
+              </span>
+              <span>
+                <a class="row-action" href="{{ url_for('request_status', request_id=req.id) }}">Open</a>
+              </span>
+            </div>
+          {% else %}
+            <div class="dash-table-row spotlight-row">
+              <span>No spotlight items.</span>
+              <span>-</span>
+              <span>-</span>
+              <span>-</span>
+            </div>
+          {% endfor %}
+        </section>
       </div>
 
-      {% for req in requests %}
-        <div class="dash-table-row">
-          <span>
-            <strong>{{ req.employee_name }}</strong>
-            <span class="table-subtext">{{ req.job_title }}{% if req.gender %} · {{ req.gender }}{% endif %}</span>
-          </span>
-          <span>
-            <span class="mono-mail">{{ req.employee_email }}</span>
-            <span class="table-subtext">{{ req.company_email }}</span>
-          </span>
-          <span>
-            {{ req.created_at.strftime('%b %d, %Y') if req.created_at else '-' }}
-            <span class="table-subtext">{{ req.work_mode }} · {{ req.work_location }}</span>
-          </span>
-          <span>
-            {% if req.status == 'PENDING_IT' %}
-              <span class="status-pill status-pending-it">Pending IT</span>
-            {% elif req.status == 'PENDING_APPROVAL' %}
-              <span class="status-pill status-pending-approval">Pending Approval</span>
-            {% elif req.status == 'APPROVED' %}
-              <span class="status-pill status-approved">Approved</span>
-            {% else %}
-              <span class="status-pill status-rejected">Rejected</span>
-            {% endif %}
-            <span class="table-subtext">Pending from: {{ tracking_map.get(req.id, {}).get('pending_from', '-') }}</span>
-            <span class="workflow-tree">
-              {% for step in tracking_map.get(req.id, {}).get('steps', []) %}
-                <span class="tree-node tree-{{ step.state }}">{{ step.label }}</span>{% if not loop.last %}<span class="tree-arrow">-></span>{% endif %}
+      <aside class="dash-sidebar">
+        <section class="side-panel">
+          <div class="side-panel-head">
+            <div>
+              <h2>Quick actions</h2>
+              <p>Role-aware shortcuts for your queue.</p>
+            </div>
+          </div>
+          <div class="shortcut-grid">
+            {% for action in dashboard_actions %}
+              <a class="shortcut-card {{ action.tone }}" href="{{ action.href }}">
+                <strong>{{ action.label }}</strong>
+                <span>{{ action.description }}</span>
+              </a>
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="side-panel">
+          <div class="side-panel-head">
+            <div>
+              <h2>{{ activity_feed.title }}</h2>
+              <p>{{ activity_feed.empty_message }}</p>
+            </div>
+          </div>
+
+          {% if activity_feed.entries %}
+            <div class="activity-feed">
+              {% for item in activity_feed.entries %}
+                <article class="activity-item">
+                  <div class="activity-topline">
+                    <span class="status-pill {{ item.tone }}">{{ item.label }}</span>
+                    <span>{{ item.time }}</span>
+                  </div>
+                  <strong>{{ item.employee }}</strong>
+                  <p>{{ item.activity }}</p>
+                  <span class="table-subtext">Actor: {{ item.actor }} · Status: {{ item.request_status }}</span>
+                </article>
               {% endfor %}
-            </span>
-          </span>
-          <span>
-            {% if role == 'IT_ADMIN' and req.status == 'PENDING_IT' %}
-              <a class="row-action" href="{{ url_for('it_provision', request_id=req.id) }}">Provision</a>
-            {% else %}
-              <a class="row-action" href="{{ url_for('request_status', request_id=req.id) }}">View</a>
-            {% endif %}
-          </span>
-        </div>
-      {% else %}
-        <div class="dash-table-row">
-          <span>No requests found.</span>
-          <span>-</span>
-          <span>-</span>
-          <span>-</span>
-          <span>-</span>
-        </div>
-      {% endfor %}
+            </div>
+          {% else %}
+            <div class="empty-panel">{{ activity_feed.empty_message }}</div>
+          {% endif %}
+        </section>
+      </aside>
     </section>
   </div>
 </section>

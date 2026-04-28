@@ -199,6 +199,189 @@ def create_app():
 
         return {req.id: build_tracking_entry(req, approval_map, provisioned_ids) for req in requests}
 
+    def build_dashboard_hero(role):
+        if role == ROLE_HR:
+            return {
+                "eyebrow": "HR command center",
+                "title": "Open onboarding requests faster and keep every handoff visible.",
+                "subtitle": "Create requests, track the IT queue, and review the latest activity in one place.",
+                "primary_label": "+ New employee request",
+                "primary_href": url_for("hr_new_request"),
+                "secondary_label": "View history",
+                "secondary_href": url_for("history"),
+            }
+
+        if role == ROLE_IT:
+            return {
+                "eyebrow": "IT provisioning hub",
+                "title": "Work your queue with a live provisioning log beside it.",
+                "subtitle": "See pending tasks, audit events, and the requests waiting for approval without switching screens.",
+                "primary_label": "Open queue",
+                "primary_href": "#requests-table",
+                "secondary_label": "View history",
+                "secondary_href": url_for("history"),
+            }
+
+        if role == ROLE_CISO:
+            return {
+                "eyebrow": "Security approval console",
+                "title": "Review decisions with the full approval trail in view.",
+                "subtitle": "Monitor open approvals, previous decisions, and the latest audit entries for your domain.",
+                "primary_label": "Pending approvals",
+                "primary_href": url_for("approvals"),
+                "secondary_label": "View history",
+                "secondary_href": url_for("history"),
+            }
+
+        return {
+            "eyebrow": "Management approval console",
+            "title": "Stay on top of approvals, exceptions, and request aging.",
+            "subtitle": "Use the dashboard to review the current queue and the decision log for your domain.",
+            "primary_label": "Pending approvals",
+            "primary_href": url_for("approvals"),
+            "secondary_label": "View history",
+            "secondary_href": url_for("history"),
+        }
+
+    def build_dashboard_actions(role):
+        if role == ROLE_HR:
+            return [
+                {
+                    "label": "Create employee request",
+                    "description": "Kick off a new onboarding case with company email preview.",
+                    "href": url_for("hr_new_request"),
+                    "tone": "action-blue",
+                },
+                {
+                    "label": "Review request history",
+                    "description": "Filter previous HR submissions and export CSV if needed.",
+                    "href": url_for("history"),
+                    "tone": "action-slate",
+                },
+                {
+                    "label": "Track pending approvals",
+                    "description": "See which requests are waiting on IT, CISO, or Management.",
+                    "href": "#requests-table",
+                    "tone": "action-amber",
+                },
+            ]
+
+        if role == ROLE_IT:
+            return [
+                {
+                    "label": "Open provisioning queue",
+                    "description": "Jump into the oldest IT requests first.",
+                    "href": "#requests-table",
+                    "tone": "action-blue",
+                },
+                {
+                    "label": "View audit trail",
+                    "description": "Inspect recent provisioning events and decision outcomes.",
+                    "href": url_for("history"),
+                    "tone": "action-slate",
+                },
+                {
+                    "label": "Review escalations",
+                    "description": "Spot requests that have already moved into approval.",
+                    "href": url_for("approvals"),
+                    "tone": "action-amber",
+                },
+            ]
+
+        if role == ROLE_CISO:
+            return [
+                {
+                    "label": "Approve pending items",
+                    "description": "Work through requests that are waiting on your decision.",
+                    "href": url_for("approvals"),
+                    "tone": "action-rose",
+                },
+                {
+                    "label": "Inspect approval logs",
+                    "description": "See the latest approval decisions and remarks.",
+                    "href": url_for("history"),
+                    "tone": "action-slate",
+                },
+                {
+                    "label": "Open status view",
+                    "description": "Review the full workflow for any request in your domain.",
+                    "href": url_for("dashboard") + "#requests-table",
+                    "tone": "action-blue",
+                },
+            ]
+
+        return [
+            {
+                "label": "Approve pending items",
+                "description": "Clear the current domain queue and keep the workflow moving.",
+                "href": url_for("approvals"),
+                "tone": "action-green",
+            },
+            {
+                "label": "Inspect decision history",
+                "description": "Review previous approvals, rejections, and remarks.",
+                "href": url_for("history"),
+                "tone": "action-slate",
+            },
+            {
+                "label": "Open request status board",
+                "description": "Use the dashboard table to inspect request progress.",
+                "href": "#requests-table",
+                "tone": "action-blue",
+            },
+        ]
+
+    def build_activity_feed(role, domain, user_id):
+        query = db.session.query(RequestAudit, EmployeeRequest).join(
+            EmployeeRequest,
+            RequestAudit.request_id == EmployeeRequest.id,
+        ).filter(EmployeeRequest.domain == domain)
+
+        if role == ROLE_HR:
+            query = query.filter(EmployeeRequest.requested_by == user_id)
+            title = "HR activity feed"
+            empty_message = "Your latest request submissions and workflow updates will appear here."
+        elif role == ROLE_IT:
+            title = "IT operations log"
+            empty_message = "Provisioning and approval events for your domain will appear here."
+        elif role == ROLE_CISO:
+            title = "CISO approval log"
+            empty_message = "Recent decisions and approval comments will appear here."
+        else:
+            title = "Management decision log"
+            empty_message = "Recent approvals, rejections, and audit events will appear here."
+
+        audits = query.order_by(RequestAudit.created_at.desc()).limit(8).all()
+
+        event_meta = {
+            "REQUEST_CREATED": ("Request created", "action-blue"),
+            "REQUEST_PROVISIONED": ("Provisioning submitted", "action-amber"),
+            "APPROVAL_DECISION": ("Approval decision", "action-rose"),
+            "REQUEST_APPROVED": ("Request approved", "action-green"),
+            "REQUEST_REJECTED": ("Request rejected", "action-rose"),
+        }
+
+        items = []
+        for audit, req in audits:
+            label, tone = event_meta.get(audit.event_type, (audit.event_type.replace("_", " ").title(), "action-slate"))
+            items.append(
+                {
+                    "time": audit.created_at.strftime("%b %d, %H:%M") if audit.created_at else "-",
+                    "label": label,
+                    "tone": tone,
+                    "employee": req.employee_name,
+                    "activity": audit.details or "-",
+                    "actor": audit.actor_role or "System",
+                    "request_status": req.status,
+                }
+            )
+
+        return {
+            "title": title,
+            "empty_message": empty_message,
+            "entries": items,
+        }
+
     def build_csv_response(filename, headers, rows):
         buffer = StringIO()
         writer = csv.DictWriter(buffer, fieldnames=headers, extrasaction="ignore")
@@ -350,6 +533,10 @@ def create_app():
     def index():
         return render_template("index.html")
 
+    @app.route("/features")
+    def features():
+        return render_template("features.html")
+
     @app.route("/signup", methods=["GET", "POST"])
     def signup():
         if request.method == "POST":
@@ -428,7 +615,20 @@ def create_app():
             requests = EmployeeRequest.query.filter_by(domain=domain, status=STATUS_PENDING_APPROVAL).order_by(EmployeeRequest.created_at.desc()).all()
         tracking_map = build_tracking_map(requests)
         dashboard_widgets = build_dashboard_widgets(current_user.role, requests, tracking_map)
-        return render_template("dashboard.html", requests=requests, role=current_user.role, tracking_map=tracking_map, dashboard_widgets=dashboard_widgets)
+        dashboard_hero = build_dashboard_hero(current_user.role)
+        dashboard_actions = build_dashboard_actions(current_user.role)
+        activity_feed = build_activity_feed(current_user.role, domain, current_user.id)
+        return render_template(
+            "dashboard.html",
+            requests=requests,
+            role=current_user.role,
+            tracking_map=tracking_map,
+            dashboard_widgets=dashboard_widgets,
+            dashboard_hero=dashboard_hero,
+            dashboard_actions=dashboard_actions,
+            activity_feed=activity_feed,
+            spotlight_requests=requests[:4],
+        )
 
     @app.route("/hr/requests/new", methods=["GET", "POST"])
     @login_required
