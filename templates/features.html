@@ -3,300 +3,111 @@
 {% block show_page_controls %}false{% endblock %}
 
 {% block content %}
-<section class="features-hero">
-  <div class="features-header">
-    <h1>Enterprise-Grade Employee Onboarding Platform</h1>
-    <p>Secure, automated, and compliant from request to access provisioning</p>
+<!-- How it Works Section -->
+<section class="how-it-works-section">
+  <div class="how-it-works-header">
+    <h1>How it works</h1>
+    <p>4-stage process with full security governance at every step</p>
   </div>
-</section>
 
-<!-- Value Propositions Section -->
-<section class="value-props-section">
-  <h2>Why Choose Us</h2>
-  <div class="value-props-grid">
-    <div class="value-prop-card">
-      <div class="value-icon">⚡</div>
-      <h3>4-Stage Workflow</h3>
-      <p>Streamlined process from HR request to IT provisioning to dual approvals</p>
-    </div>
-    <div class="value-prop-card">
-      <div class="value-icon">🔐</div>
-      <h3>Security First</h3>
-      <p>Dual approval from CISO & Management ensures governance at every step</p>
-    </div>
-    <div class="value-prop-card">
-      <div class="value-icon">📊</div>
-      <h3>Full Visibility</h3>
-      <p>Complete audit trails and real-time tracking for compliance and accountability</p>
-    </div>
-    <div class="value-prop-card">
-      <div class="value-icon">🤝</div>
-      <h3>Multi-Tenant Safe</h3>
-      <p>Domain isolation ensures complete data separation between organizations</p>
-    </div>
-  </div>
-</section>
-
-<!-- End-to-End Workflow Section (Card Format) -->
-<section class="workflow-section">
-  <h2>End-to-End Onboarding Workflow</h2>
-  <p class="workflow-intro">Four-stage process ensuring secure and compliant employee access provisioning</p>
-  
-  <div class="workflow-cards-grid">
-    <!-- Stage 1: HR Request -->
-    <div class="workflow-card">
-      <div class="card-stage">Stage 1</div>
-      <div class="card-icon">📝</div>
-      <h3>HR Submits Request</h3>
-      <p class="card-role">HR Department</p>
-      <ul class="card-features">
-        <li>Create new onboarding request</li>
-        <li>Enter employee details</li>
-        <li>Specify work mode</li>
-        <li>Select M365 tier</li>
-      </ul>
-      <div class="card-status pending">Pending</div>
-    </div>
-
-    <!-- Stage 2: IT Provisioning -->
-    <div class="workflow-card">
-      <div class="card-stage">Stage 2</div>
-      <div class="card-icon">⚙️</div>
-      <h3>IT Provisions Access</h3>
-      <p class="card-role">IT Admin</p>
-      <ul class="card-features">
-        <li>Create accounts & IDs</li>
-        <li>Assign M365 licenses</li>
-        <li>Configure permissions</li>
-        <li>Setup network access</li>
-      </ul>
-      <div class="card-status progress">In Progress</div>
-    </div>
-
-    <!-- Stage 3: Dual Approvals -->
-    <div class="workflow-card">
-      <div class="card-stage">Stage 3</div>
-      <div class="card-icon">✅</div>
-      <h3>Dual Security Approvals</h3>
-      <p class="card-role">CISO & Management</p>
-      <ul class="card-features">
-        <li>CISO validates security</li>
-        <li>Manager approves budget</li>
-        <li>Both must consent</li>
-        <li>Full audit recorded</li>
-      </ul>
-      <div class="card-status approval">Review</div>
-    </div>
-
-    <!-- Stage 4: Access Granted -->
-    <div class="workflow-card">
-      <div class="card-stage">Stage 4</div>
-      <div class="card-icon">🎉</div>
-      <h3>Access Granted</h3>
-      <p class="card-role">Employee Ready</p>
-      <ul class="card-features">
-        <li>Account activated</li>
-        <li>Systems configured</li>
-        <li>Welcome email sent</li>
-        <li>Employee onboarded</li>
-      </ul>
-      <div class="card-status approved">Complete</div>
-    </div>
-  </div>
-</section>
-
-<!-- Role-Based Dashboards Section (Cards) -->
-<section class="roles-section">
-  <h2>Role-Based Dashboards</h2>
-  <p class="roles-intro">Tailored dashboards and tools for each user role</p>
-
-  <div class="roles-cards-grid">
-    <!-- HR Role -->
-    <div class="role-card hr-card">
-      <div class="role-card-header">
-        <div class="role-badge">👥</div>
-        <h3>HR Department</h3>
+  <div class="stages-container">
+    <!-- Stage 1: HR -->
+    <div class="stage-row">
+      <div class="stage-left">
+        <div class="stage-dot">●</div>
+        <h3>STAGE 1 — HR</h3>
+        <h4>Submit onboarding request</h4>
+        <p>HR enters employee details, work mode, and M365 license tier.<br>Auto-routed to IT.</p>
       </div>
-      <p class="role-subtitle">Manage onboarding requests</p>
-      <ul class="role-card-features">
-        <li>Submit new requests</li>
-        <li>Track request status</li>
-        <li>View request history</li>
-        <li>Real-time notifications</li>
-      </ul>
+      <div class="stage-right">
+        <div class="stage-status pending">Pending IT review</div>
+      </div>
     </div>
 
-    <!-- IT Admin Role -->
-    <div class="role-card it-card">
-      <div class="role-card-header">
-        <div class="role-badge">⚙️</div>
-        <h3>IT Admin</h3>
+    <!-- Stage 2: IT Admin -->
+    <div class="stage-row">
+      <div class="stage-left">
+        <div class="stage-dot">●</div>
+        <h3>STAGE 2 — IT ADMIN</h3>
+        <h4>Provision access & accounts</h4>
+        <p>Creates user ID, assigns licenses, configures security groups and VPN. Forwards for approval.</p>
       </div>
-      <p class="role-subtitle">Provision user access</p>
-      <ul class="role-card-features">
-        <li>View provisioning queue</li>
-        <li>Configure access rights</li>
-        <li>Monitor approvals</li>
-        <li>Audit logging</li>
-      </ul>
+      <div class="stage-right">
+        <div class="stage-status progress">In provisioning</div>
+      </div>
     </div>
 
-    <!-- CISO Role -->
-    <div class="role-card ciso-card">
-      <div class="role-card-header">
-        <div class="role-badge">🔒</div>
-        <h3>CISO</h3>
+    <!-- Stage 3: CISO + Management -->
+    <div class="stage-row">
+      <div class="stage-left">
+        <div class="stage-dot">●</div>
+        <h3>STAGE 3 — CISO + MANAGEMENT</h3>
+        <h4>Dual security approval</h4>
+        <p>Both approvers must sign off. Either rejection returns request to HR with full notes.</p>
       </div>
-      <p class="role-subtitle">Security & compliance</p>
-      <ul class="role-card-features">
-        <li>Security reviews</li>
-        <li>Risk assessments</li>
-        <li>Approve/reject access</li>
-        <li>Compliance tracking</li>
-      </ul>
+      <div class="stage-right">
+        <div class="stage-status review">Requires 2 approvals</div>
+      </div>
     </div>
 
-    <!-- Management Role -->
-    <div class="role-card mgmt-card">
-      <div class="role-card-header">
-        <div class="role-badge">📊</div>
-        <h3>Management</h3>
+    <!-- Stage 4: Complete -->
+    <div class="stage-row">
+      <div class="stage-left">
+        <div class="stage-dot">●</div>
+        <h3>STAGE 4 — COMPLETE</h3>
+        <h4>Access live, employee ready</h4>
+        <p>Account activated, welcome email sent, manager notified. Full audit log sealed.</p>
       </div>
-      <p class="role-subtitle">Business approvals</p>
-      <ul class="role-card-features">
-        <li>Business justification</li>
-        <li>Budget validation</li>
-        <li>Approve/reject</li>
-        <li>SLA reporting</li>
-      </ul>
+      <div class="stage-right">
+        <div class="stage-status approved">Approved ✓</div>
+      </div>
     </div>
   </div>
-</section>
 
-<!-- Key Features Section (Card Grid) -->
-<section class="features-section">
-  <h2>Core Features</h2>
-  <p class="features-intro">Everything you need for secure onboarding</p>
-  
-  <div class="features-cards">
-    <div class="feat-card">
-      <div class="feat-icon">🔐</div>
-      <h4>RBAC</h4>
-      <p>Role-based access control with customized workflows for each user type</p>
+  <!-- Features Grid -->
+  <div class="features-grid">
+    <div class="feature-box">
+      <div class="feature-icon">▥</div>
+      <h5>RBAC</h5>
+      <p>4 roles, each with scoped dashboards and actions</p>
     </div>
-
-    <div class="feat-card">
-      <div class="feat-icon">📋</div>
-      <h4>Request Tracking</h4>
-      <p>Real-time tracking from submission through approval to provisioning</p>
+    <div class="feature-box">
+      <div class="feature-icon">◐</div>
+      <h5>Dual approval</h5>
+      <p>No single point of failure in access decisions</p>
     </div>
-
-    <div class="feat-card">
-      <div class="feat-icon">✅</div>
-      <h4>Dual Approval</h4>
-      <p>Security and business approval governance for all access grants</p>
+    <div class="feature-box">
+      <div class="feature-icon">✓</div>
+      <h5>Audit logs</h5>
+      <p>Timestamped trail of every request, action, and approval</p>
     </div>
-
-    <div class="feat-card">
-      <div class="feat-icon">🏢</div>
-      <h4>Multi-Tenant</h4>
-      <p>Complete domain isolation ensures data separation between organizations</p>
+    <div class="feature-box">
+      <div class="feature-icon">■</div>
+      <h5>Multi-tenancy</h5>
+      <p>Domain isolation enforced at DB level — zero data leakage</p>
     </div>
-
-    <div class="feat-card">
-      <div class="feat-icon">📊</div>
-      <h4>Audit Trails</h4>
-      <p>Complete logging of all actions for compliance and accountability</p>
+    <div class="feature-box">
+      <div class="feature-icon">→</div>
+      <h5>Auto-routing</h5>
+      <p>Requests flow to the right person automatically</p>
     </div>
-
-    <div class="feat-card">
-      <div class="feat-icon">⚡</div>
-      <h4>Quick Actions</h4>
-      <p>One-click shortcuts to common tasks on your dashboard</p>
-    </div>
-
-    <div class="feat-card">
-      <div class="feat-icon">🎯</div>
-      <h4>Automation</h4>
-      <p>Intelligent routing ensures requests flow to the right people</p>
-    </div>
-
-    <div class="feat-card">
-      <div class="feat-icon">📱</div>
-      <h4>Responsive</h4>
-      <p>Works seamlessly on desktop, tablet, and mobile devices</p>
-    </div>
-  </div>
-</section>
-
-<!-- Domain Isolation Section (Cards) -->
-<section class="security-details-section">
-  <h2>Security & Multi-Tenancy</h2>
-  <p class="security-intro">Enterprise-grade isolation and data protection</p>
-  
-  <div class="security-cards-grid">
-    <div class="sec-card">
-      <div class="sec-number">1</div>
-      <h4>Domain Isolation</h4>
-      <p>Users tagged by domain; complete data separation prevents cross-organization access</p>
-    </div>
-
-    <div class="sec-card">
-      <div class="sec-number">2</div>
-      <h4>Role-Domain Enforcement</h4>
-      <p>Even admins cannot access other domains; dual-layer access control</p>
-    </div>
-
-    <div class="sec-card">
-      <div class="sec-number">3</div>
-      <h4>Request Privacy</h4>
-      <p>HR requests remain confidential within organization domain only</p>
-    </div>
-
-    <div class="sec-card">
-      <div class="sec-number">4</div>
-      <h4>Isolated Audit Logs</h4>
-      <p>Activity partitioned by domain; each org sees only their history</p>
-    </div>
-
-    <div class="sec-card">
-      <div class="sec-number">5</div>
-      <h4>Database Enforcement</h4>
-      <p>Access enforced at DB layer; no cross-tenant data leakage possible</p>
-    </div>
-  </div>
-</section>
-
-<!-- Security & Compliance Section -->
-<section class="security-section">
-  <h2>Security & Compliance</h2>
-  <div class="security-grid">
-    <div class="security-item">
-      <h4>🔒 Data Encryption</h4>
-      <p>All sensitive data is encrypted in transit and at rest to protect employee information.</p>
-    </div>
-    <div class="security-item">
-      <h4>🛡️ Access Control</h4>
-      <p>Granular permissions ensure users only access information relevant to their role and domain.</p>
-    </div>
-    <div class="security-item">
-      <h4>📝 Complete Audit Trail</h4>
-      <p>Every action is logged with timestamp, actor, and purpose for comprehensive compliance reporting.</p>
-    </div>
-    <div class="security-item">
-      <h4>✓ Approval Governance</h4>
-      <p>Dual approval requirement ensures no single point of failure in access decisions.</p>
+    <div class="feature-box">
+      <div class="feature-icon">◉</div>
+      <h5>Status tracking</h5>
+      <p>Real-time progress visibility for all stakeholders</p>
     </div>
   </div>
 </section>
 
 <!-- CTA Section -->
 <section class="features-cta">
-  <h2>Ready to Streamline Your Onboarding?</h2>
-  <p>Join the organizations using our platform to secure and automate employee onboarding.</p>
-  <div class="cta-buttons">
-    <a href="{{ url_for('signup') }}" class="btn btn-primary">Create Your Account</a>
-    <a href="{{ url_for('login') }}" class="btn btn-outline">Sign In</a>
+  <div class="cta-content">
+    <h2>Ready to streamline onboarding?</h2>
+    <p>Secure, compliant, automated from day one</p>
+    <div class="cta-buttons">
+      <a href="{{ url_for('login') }}" class="btn btn-outline">Sign in</a>
+      <a href="{{ url_for('signup') }}" class="btn btn-primary">Create account →</a>
+    </div>
   </div>
 </section>
 
