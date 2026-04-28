@@ -105,7 +105,7 @@
                 <span class="table-subtext">{{ req.company_email }}</span>
               </span>
               <span>
-                {{ req.created_at.strftime('%b %d, %Y') if req.created_at else '-' }}
+                {{ req.created_at.strftime('%b %d, %Y %H:%M') if req.created_at else '-' }}
                 <span class="table-subtext">{{ req.work_mode }} · {{ req.work_location }}</span>
               </span>
               <span>

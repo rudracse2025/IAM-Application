@@ -612,7 +612,7 @@ def create_app():
         elif current_user.role == ROLE_IT:
             requests = EmployeeRequest.query.filter_by(domain=domain, status=STATUS_PENDING_IT).order_by(EmployeeRequest.created_at.desc()).all()
         else:
-            requests = EmployeeRequest.query.filter_by(domain=domain, status=STATUS_PENDING_APPROVAL).order_by(EmployeeRequest.created_at.desc()).all()
+            requests = EmployeeRequest.query.filter_by(domain=domain).order_by(EmployeeRequest.created_at.desc()).all()
         tracking_map = build_tracking_map(requests)
         dashboard_widgets = build_dashboard_widgets(current_user.role, requests, tracking_map)
         dashboard_hero = build_dashboard_hero(current_user.role)
